@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>WebView.qml</file>
+        <file>FlickableWebView.qml</file>
+    </qresource>
+</RCC>
