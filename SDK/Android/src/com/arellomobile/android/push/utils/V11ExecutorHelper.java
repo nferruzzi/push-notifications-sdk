@@ -1,4 +1,11 @@
-package com.arellomobile.android.push;
+//
+//  V11ExecutorHelper.java
+//
+// Pushwoosh Push Notifications SDK
+// www.pushwoosh.com
+//
+// MIT Licensed
+package com.arellomobile.android.push.utils;
 
 import android.os.AsyncTask;
 
