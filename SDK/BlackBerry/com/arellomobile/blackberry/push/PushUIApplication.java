@@ -215,7 +215,7 @@ public abstract class PushUIApplication extends UiApplication implements
 		switch (status.getStatus()) {
 		case PushApplicationStatus.STATUS_ACTIVE:
 			pushStatus = PushStatus.getStatusBBActive();
-			registerPooshWoosh();
+			registerPushWoosh();
 			break;
 		case PushApplicationStatus.STATUS_FAILED:
 			int reason = -1;
@@ -236,7 +236,7 @@ public abstract class PushUIApplication extends UiApplication implements
 			break;
 		case PushApplicationStatus.STATUS_NOT_REGISTERED:
 			pushStatus = PushStatus.getStatusBBNotRegistered();
-			unRegisterPooshWoosh();
+			unRegisterPushWoosh();
 			break;
 		case PushApplicationStatus.STATUS_PENDING:
 			pushStatus = PushStatus.getStatusBBPending();
@@ -252,7 +252,7 @@ public abstract class PushUIApplication extends UiApplication implements
 		}
 	}
 
-	public void registerPooshWoosh() {
+	public void registerPushWoosh() {
 		// Register our Device with PushWoosh
 		Thread t0 = new Thread() {
 			public void run() {
@@ -275,7 +275,7 @@ public abstract class PushUIApplication extends UiApplication implements
 		t0.start();
 	}
 
-	public void unRegisterPooshWoosh() {
+	public void unRegisterPushWoosh() {
 		// unRegister our Device with PushWoosh
 		Thread t0 = new Thread() {
 			public void run() {

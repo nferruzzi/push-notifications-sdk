@@ -15,23 +15,36 @@ import android.os.Bundle;
 
 import java.util.logging.Logger;
 
-public class MessageActivity extends Activity {
-    private static final String MESSAGE_HANDLER_KEY = ".MESSAGE";
+public class MessageActivity extends Activity
+{
+	private static final String MESSAGE_HANDLER_KEY = ".MESSAGE";
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        Intent notifyIntent = new Intent();
-        String intentAction = getApplicationContext().getPackageName() + MESSAGE_HANDLER_KEY;
-        notifyIntent.setAction(intentAction);
-        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        notifyIntent.putExtras(getIntent().getExtras());
-        try {
-            startActivity(notifyIntent);
-        } catch (ActivityNotFoundException e) {
-            Logger.getLogger(getClass().getSimpleName()).severe("Can't launch activity. Are you sure you have an activity with '" + intentAction + "' action in your manifest?");
-        }
-        finish();
-    }
+		startPushMessageHandlerActivity();
+
+		finish();
+	}
+
+	private void startPushMessageHandlerActivity()
+	{
+		Intent notifyIntent = new Intent();
+		String intentAction = getApplicationContext().getPackageName() + MESSAGE_HANDLER_KEY;
+		notifyIntent.setAction(intentAction);
+		notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		notifyIntent.putExtras(getIntent().getExtras());
+		try
+		{
+			startActivity(notifyIntent);
+		}
+		catch (ActivityNotFoundException e)
+		{
+			Logger.getLogger(getClass().getSimpleName())
+					.severe("Can't launch activity. Are you sure you have an activity with '" + intentAction +
+							"' action in your manifest?");
+		}
+	}
 }

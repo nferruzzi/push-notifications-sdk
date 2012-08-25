@@ -1,6 +1,7 @@
 //
 //  PushNotificationManager.h
-//  PushNotificationManager
+//  Pushwoosh SDK
+//  (c) Pushwoosh 2012
 //
 
 #import <Foundation/Foundation.h>
@@ -11,26 +12,34 @@
 
 @optional
 //handle push notification, display alert, if this method is implemented onPushAccepted will not be called, internal message boxes will not be displayed
-- (void) onPushReceived:(PushNotificationManager *)pushManager onStart:(BOOL)onStart;
+- (void) onPushReceived:(PushNotificationManager *)pushManager withNotification:(NSDictionary *)pushNotification onStart:(BOOL)onStart;
 
 //user pressed OK on the push notification
-- (void) onPushAccepted:(PushNotificationManager *)pushManager;
+- (void) onPushAccepted:(PushNotificationManager *)pushManager withNotification:(NSDictionary *)pushNotification;
 @end
 
 @interface PushNotificationManager : NSObject {
 	NSString *appCode;
 	NSString *appName;
-	
-	NSDictionary *lastPushDict;
+
+	NSInteger internalIndex;
+	NSMutableDictionary *pushNotifications;
 	NSObject<PushNotificationDelegate> *delegate;
 }
 
 @property (nonatomic, copy) NSString *appCode;
 @property (nonatomic, copy) NSString *appName;
-@property (nonatomic, retain) NSDictionary *lastPushDict;
+@property (nonatomic, retain) NSDictionary *pushNotifications;
 @property (nonatomic, assign) NSObject<PushNotificationDelegate> *delegate;
 
++ (void)initializeAppCode:(NSString *)appCode appName:(NSString *)appName;
+
++ (PushNotificationManager *)pushManager;
+
 - (id) initWithApplicationCode:(NSString *)appCode appName:(NSString *)appName;
+
+//send tags to server
+- (void) setTags: (NSDictionary *) tags;
 
 //sends the token to server
 - (void) handlePushRegistration:(NSData *)devToken;
@@ -40,9 +49,9 @@
 - (BOOL) handlePushReceived:(NSDictionary *) userInfo;
 
 //gets apn payload
-- (NSDictionary *) getApnPayload;
+- (NSDictionary *) getApnPayload:(NSDictionary *)pushNotification;
 
 //get custom data from the push payload
-- (NSString *) getCustomPushData;
+- (NSString *) getCustomPushData:(NSDictionary *)pushNotification;
 
 @end

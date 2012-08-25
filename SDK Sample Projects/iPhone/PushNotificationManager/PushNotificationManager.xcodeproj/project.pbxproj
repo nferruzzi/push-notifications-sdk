@@ -7,19 +7,49 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		500B663E15E3DCD2002B2233 /* PWGetNearestZoneRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B663615E3DCD2002B2233 /* PWGetNearestZoneRequest.h */; };
+		500B663F15E3DCD2002B2233 /* PWGetNearestZoneRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B663715E3DCD2002B2233 /* PWGetNearestZoneRequest.m */; };
+		500B664015E3DCD2002B2233 /* PWPushStatRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B663815E3DCD2002B2233 /* PWPushStatRequest.h */; };
+		500B664115E3DCD2002B2233 /* PWPushStatRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B663915E3DCD2002B2233 /* PWPushStatRequest.m */; };
+		500B664215E3DCD2002B2233 /* PWRegisterDeviceRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B663A15E3DCD2002B2233 /* PWRegisterDeviceRequest.h */; };
+		500B664315E3DCD2002B2233 /* PWRegisterDeviceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B663B15E3DCD2002B2233 /* PWRegisterDeviceRequest.m */; };
+		500B664415E3DCD2002B2233 /* PWSetTagsRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B663C15E3DCD2002B2233 /* PWSetTagsRequest.h */; };
+		500B664515E3DCD2002B2233 /* PWSetTagsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B663D15E3DCD2002B2233 /* PWSetTagsRequest.m */; };
+		500B664915E3DCDD002B2233 /* MyAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B664615E3DCDD002B2233 /* MyAppDelegate.h */; };
+		500B664A15E3DCDD002B2233 /* MyAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B664715E3DCDD002B2233 /* MyAppDelegate.m */; };
 		50BD5D521365DA3C00275CDB /* HtmlWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 50BD5D3D1365DA3C00275CDB /* HtmlWebViewController.h */; };
 		50BD5D531365DA3C00275CDB /* HtmlWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BD5D3E1365DA3C00275CDB /* HtmlWebViewController.m */; };
 		50BD5D631365DA3C00275CDB /* PushNotificationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50BD5D501365DA3C00275CDB /* PushNotificationManager.h */; };
 		50BD5D641365DA3C00275CDB /* PushNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BD5D511365DA3C00275CDB /* PushNotificationManager.m */; };
+		A4519C2F15C80D2200012F17 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4519C2E15C80D2200012F17 /* CoreLocation.framework */; };
+		A4F8238915C925AF00913778 /* PWRequestManager.h in Headers */ = {isa = PBXBuildFile; fileRef = A4F8238715C925AF00913778 /* PWRequestManager.h */; };
+		A4F8238A15C925AF00913778 /* PWRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8238815C925AF00913778 /* PWRequestManager.m */; };
+		A4F8239115C925C400913778 /* PWRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = A4F8238F15C925C400913778 /* PWRequest.h */; };
+		A4F8239215C925C400913778 /* PWRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F8239015C925C400913778 /* PWRequest.m */; };
 		AA747D9F0F9514B9006C5449 /* PushNotificationManager_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* PushNotificationManager_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		500B663615E3DCD2002B2233 /* PWGetNearestZoneRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PWGetNearestZoneRequest.h; path = Classes/PWGetNearestZoneRequest.h; sourceTree = "<group>"; };
+		500B663715E3DCD2002B2233 /* PWGetNearestZoneRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PWGetNearestZoneRequest.m; path = Classes/PWGetNearestZoneRequest.m; sourceTree = "<group>"; };
+		500B663815E3DCD2002B2233 /* PWPushStatRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PWPushStatRequest.h; path = Classes/PWPushStatRequest.h; sourceTree = "<group>"; };
+		500B663915E3DCD2002B2233 /* PWPushStatRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PWPushStatRequest.m; path = Classes/PWPushStatRequest.m; sourceTree = "<group>"; };
+		500B663A15E3DCD2002B2233 /* PWRegisterDeviceRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PWRegisterDeviceRequest.h; path = Classes/PWRegisterDeviceRequest.h; sourceTree = "<group>"; };
+		500B663B15E3DCD2002B2233 /* PWRegisterDeviceRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PWRegisterDeviceRequest.m; path = Classes/PWRegisterDeviceRequest.m; sourceTree = "<group>"; };
+		500B663C15E3DCD2002B2233 /* PWSetTagsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PWSetTagsRequest.h; path = Classes/PWSetTagsRequest.h; sourceTree = "<group>"; };
+		500B663D15E3DCD2002B2233 /* PWSetTagsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PWSetTagsRequest.m; path = Classes/PWSetTagsRequest.m; sourceTree = "<group>"; };
+		500B664615E3DCDD002B2233 /* MyAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyAppDelegate.h; path = Classes/MyAppDelegate.h; sourceTree = "<group>"; };
+		500B664715E3DCDD002B2233 /* MyAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyAppDelegate.m; path = Classes/MyAppDelegate.m; sourceTree = "<group>"; };
 		50BD5D3D1365DA3C00275CDB /* HtmlWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HtmlWebViewController.h; path = Classes/HtmlWebViewController.h; sourceTree = "<group>"; };
 		50BD5D3E1365DA3C00275CDB /* HtmlWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HtmlWebViewController.m; path = Classes/HtmlWebViewController.m; sourceTree = "<group>"; };
 		50BD5D501365DA3C00275CDB /* PushNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PushNotificationManager.h; path = Classes/PushNotificationManager.h; sourceTree = "<group>"; };
 		50BD5D511365DA3C00275CDB /* PushNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PushNotificationManager.m; path = Classes/PushNotificationManager.m; sourceTree = "<group>"; };
+		A4519C2E15C80D2200012F17 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		A4F8238715C925AF00913778 /* PWRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PWRequestManager.h; path = Classes/PWRequestManager.h; sourceTree = "<group>"; };
+		A4F8238815C925AF00913778 /* PWRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PWRequestManager.m; path = Classes/PWRequestManager.m; sourceTree = "<group>"; };
+		A4F8238F15C925C400913778 /* PWRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PWRequest.h; path = Classes/PWRequest.h; sourceTree = "<group>"; };
+		A4F8239015C925C400913778 /* PWRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PWRequest.m; path = Classes/PWRequest.m; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* PushNotificationManager_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotificationManager_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libPushNotificationManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPushNotificationManager.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -30,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4519C2F15C80D2200012F17 /* CoreLocation.framework in Frameworks */,
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -48,6 +79,7 @@
 		0867D691FE84028FC02AAC07 /* PushNotificationManager */ = {
 			isa = PBXGroup;
 			children = (
+				A4519C2E15C80D2200012F17 /* CoreLocation.framework */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
@@ -67,6 +99,9 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				500B664615E3DCDD002B2233 /* MyAppDelegate.h */,
+				500B664715E3DCDD002B2233 /* MyAppDelegate.m */,
+				A4F8238515C9257D00913778 /* Network */,
 				50BD5D3D1365DA3C00275CDB /* HtmlWebViewController.h */,
 				50BD5D3E1365DA3C00275CDB /* HtmlWebViewController.m */,
 				50BD5D501365DA3C00275CDB /* PushNotificationManager.h */,
@@ -83,6 +118,33 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
+		A4F8238515C9257D00913778 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				500B663615E3DCD2002B2233 /* PWGetNearestZoneRequest.h */,
+				500B663715E3DCD2002B2233 /* PWGetNearestZoneRequest.m */,
+				500B663815E3DCD2002B2233 /* PWPushStatRequest.h */,
+				500B663915E3DCD2002B2233 /* PWPushStatRequest.m */,
+				500B663A15E3DCD2002B2233 /* PWRegisterDeviceRequest.h */,
+				500B663B15E3DCD2002B2233 /* PWRegisterDeviceRequest.m */,
+				500B663C15E3DCD2002B2233 /* PWSetTagsRequest.h */,
+				500B663D15E3DCD2002B2233 /* PWSetTagsRequest.m */,
+				A4F8239315C9266D00913778 /* Base */,
+			);
+			name = Network;
+			sourceTree = "<group>";
+		};
+		A4F8239315C9266D00913778 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				A4F8238715C925AF00913778 /* PWRequestManager.h */,
+				A4F8238815C925AF00913778 /* PWRequestManager.m */,
+				A4F8238F15C925C400913778 /* PWRequest.h */,
+				A4F8239015C925C400913778 /* PWRequest.m */,
+			);
+			name = Base;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -93,6 +155,13 @@
 				AA747D9F0F9514B9006C5449 /* PushNotificationManager_Prefix.pch in Headers */,
 				50BD5D521365DA3C00275CDB /* HtmlWebViewController.h in Headers */,
 				50BD5D631365DA3C00275CDB /* PushNotificationManager.h in Headers */,
+				A4F8238915C925AF00913778 /* PWRequestManager.h in Headers */,
+				A4F8239115C925C400913778 /* PWRequest.h in Headers */,
+				500B663E15E3DCD2002B2233 /* PWGetNearestZoneRequest.h in Headers */,
+				500B664015E3DCD2002B2233 /* PWPushStatRequest.h in Headers */,
+				500B664215E3DCD2002B2233 /* PWRegisterDeviceRequest.h in Headers */,
+				500B664415E3DCD2002B2233 /* PWSetTagsRequest.h in Headers */,
+				500B664915E3DCDD002B2233 /* MyAppDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,6 +220,13 @@
 			files = (
 				50BD5D531365DA3C00275CDB /* HtmlWebViewController.m in Sources */,
 				50BD5D641365DA3C00275CDB /* PushNotificationManager.m in Sources */,
+				A4F8238A15C925AF00913778 /* PWRequestManager.m in Sources */,
+				A4F8239215C925C400913778 /* PWRequest.m in Sources */,
+				500B663F15E3DCD2002B2233 /* PWGetNearestZoneRequest.m in Sources */,
+				500B664115E3DCD2002B2233 /* PWPushStatRequest.m in Sources */,
+				500B664315E3DCD2002B2233 /* PWRegisterDeviceRequest.m in Sources */,
+				500B664515E3DCD2002B2233 /* PWSetTagsRequest.m in Sources */,
+				500B664A15E3DCDD002B2233 /* MyAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -42,8 +42,6 @@ public class PushNotifications extends Plugin
         checkMessage(intent);
     }
 
-
-
     /**
      * The final call you receive before your activity is destroyed.
      */
@@ -74,7 +72,7 @@ public class PushNotifications extends Plugin
             PushManager mPushManager = null;
             try
             {
-                mPushManager = new PushManager(ctx.getActivity(), params.getString("appid"),
+                mPushManager = new PushManager(cordova.getActivity(), params.getString("appid"),
                                                params.getString("projectid"));
             } catch (JSONException e)
             {
@@ -84,14 +82,14 @@ public class PushNotifications extends Plugin
 
             try
             {
-                mPushManager.onStartup(null, ctx.getActivity());
+                mPushManager.onStartup(cordova.getActivity());
             } catch (java.lang.RuntimeException e)
             {
             	e.printStackTrace();
                 return new PluginResult(Status.ERROR);
             }
 
-            checkMessage(ctx.getActivity().getIntent());
+            checkMessage(cordova.getActivity().getIntent());
 
             result = new PluginResult(Status.NO_RESULT);
             result.setKeepCallback(true);
@@ -107,7 +105,7 @@ public class PushNotifications extends Plugin
 
             try
             {
-                GCMRegistrar.unregister(ctx.getActivity());
+                GCMRegistrar.unregister(cordova.getActivity());
             } catch (Exception e)
             {
                 return new PluginResult(Status.ERROR);
@@ -147,35 +145,39 @@ public class PushNotifications extends Plugin
         }
     }
 
-    public void doOnRegistered(String registrationId)
-    {
-        String callbackId = callbackIds.get("registerDevice");
-        PluginResult result = new PluginResult(Status.OK, registrationId);
-        success(result, callbackId);
-    }
+	public void doOnRegistered(String registrationId)
+	{
+		String callbackId = callbackIds.get("registerDevice");
+		PluginResult result = new PluginResult(Status.OK, registrationId);
+		success(result, callbackId);
+		callbackIds.remove(callbackId);
+	}
 
-    public void doOnRegisteredError(String errorId)
-    {
-        String callbackId = callbackIds.get("registerDevice");
-        PluginResult result = new PluginResult(Status.OK, errorId);
-        error(result, callbackId);
-    }
+	public void doOnRegisteredError(String errorId)
+	{
+		String callbackId = callbackIds.get("registerDevice");
+		PluginResult result = new PluginResult(Status.ERROR, errorId);
+		error(result, callbackId);
+		callbackIds.remove(callbackId);
+	}
 
-    public void doOnUnregistered(String registrationId)
-    {
-        String callbackId = callbackIds.get("unregisterDevice");
-        PluginResult result = new PluginResult(Status.OK, registrationId);
-        success(result, callbackId);
-    }
+	public void doOnUnregistered(String registrationId)
+	{
+		String callbackId = callbackIds.get("unregisterDevice");
+		PluginResult result = new PluginResult(Status.OK, registrationId);
+		success(result, callbackId);
+		callbackIds.remove(callbackId);
+	}
 
-    public void doOnUnregisteredError(String errorId)
-    {
-        String callbackId = callbackIds.get("unregisterDevice");
-        PluginResult result = new PluginResult(Status.OK, errorId);
-        error(result, callbackId);
-    }
+	public void doOnUnregisteredError(String errorId)
+	{
+		String callbackId = callbackIds.get("unregisterDevice");
+		PluginResult result = new PluginResult(Status.ERROR, errorId);
+		error(result, callbackId);
+		callbackIds.remove(callbackId);
+	}
 
-    public void doOnMessageReceive(String message)
+	public void doOnMessageReceive(String message)
     {
         String jsStatement = String.format("window.plugins.pushNotification.notificationCallback(%s);", message);
         sendJavascript(jsStatement);

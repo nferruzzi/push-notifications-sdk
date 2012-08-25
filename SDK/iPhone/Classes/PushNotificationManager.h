@@ -1,17 +1,20 @@
 //
 //  PushNotificationManager.h
+//  Pushwoosh SDK
+//  (c) Pushwoosh 2012
 //
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 @class PushNotificationManager;
+@class CLLocation;
 
 @protocol PushNotificationDelegate
 
 @optional
 //handle push notification, display alert, if this method is implemented onPushAccepted will not be called, internal message boxes will not be displayed
-- (void) onPushReceived:(PushNotificationManager *)pushManager onStart:(BOOL)onStart;
+- (void) onPushReceived:(PushNotificationManager *)pushManager withNotification:(NSDictionary *)pushNotification onStart:(BOOL)onStart;
 
 //user pressed OK on the push notification
 - (void) onPushAccepted:(PushNotificationManager *)pushManager withNotification:(NSDictionary *)pushNotification;
@@ -41,8 +44,18 @@ typedef enum enumHtmlPageSupportedOrientations {
 @property (nonatomic, assign) NSObject<PushNotificationDelegate> *delegate;
 @property (nonatomic, assign) PWSupportedOrientations supportedOrientations;
 
++ (void)initializeWithAppCode:(NSString *)appCode appName:(NSString *)appName;
+
++ (PushNotificationManager *)pushManager;
+
 - (id) initWithApplicationCode:(NSString *)appCode appName:(NSString *)appName;
 - (id) initWithApplicationCode:(NSString *)appCode navController:(UIViewController *) navController appName:(NSString *)appName;
+
+//send tags to server
+- (void) setTags: (NSDictionary *) tags;
+
+//send geolocation to the server
+- (void) sendLocation: (CLLocation *) location;
 
 //sends the token to server
 - (void) handlePushRegistration:(NSData *)devToken;

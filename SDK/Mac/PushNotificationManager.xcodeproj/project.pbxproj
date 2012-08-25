@@ -7,11 +7,35 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		500B661515DD5888002B2233 /* MyAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B661315DD5888002B2233 /* MyAppDelegate.h */; };
+		500B661615DD5888002B2233 /* MyAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B661415DD5888002B2233 /* MyAppDelegate.m */; };
+		500B661A15DD5B53002B2233 /* PWSetTagsRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B661815DD5B53002B2233 /* PWSetTagsRequest.h */; };
+		500B661B15DD5B53002B2233 /* PWSetTagsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B661915DD5B53002B2233 /* PWSetTagsRequest.m */; };
+		500B661E15DD5B9E002B2233 /* PWRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B661C15DD5B9E002B2233 /* PWRequest.h */; };
+		500B661F15DD5B9E002B2233 /* PWRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B661D15DD5B9E002B2233 /* PWRequest.m */; };
+		500B662215DD5BBA002B2233 /* PWRequestManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B662015DD5BBA002B2233 /* PWRequestManager.h */; };
+		500B662315DD5BBA002B2233 /* PWRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B662115DD5BBA002B2233 /* PWRequestManager.m */; };
+		500B662615DD5D43002B2233 /* PWRegisterDeviceRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B662415DD5D43002B2233 /* PWRegisterDeviceRequest.h */; };
+		500B662715DD5D43002B2233 /* PWRegisterDeviceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B662515DD5D43002B2233 /* PWRegisterDeviceRequest.m */; };
+		500B662A15DD5FE3002B2233 /* PWPushStatRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B662815DD5FE3002B2233 /* PWPushStatRequest.h */; };
+		500B662B15DD5FE3002B2233 /* PWPushStatRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B662915DD5FE3002B2233 /* PWPushStatRequest.m */; };
 		ABB6AF7414D2AED300D0A064 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB6AF7314D2AED300D0A064 /* Cocoa.framework */; };
 		ABB6AF7E14D2AED300D0A064 /* PushNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB6AF7D14D2AED300D0A064 /* PushNotificationManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		500B661315DD5888002B2233 /* MyAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAppDelegate.h; sourceTree = "<group>"; };
+		500B661415DD5888002B2233 /* MyAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAppDelegate.m; sourceTree = "<group>"; };
+		500B661815DD5B53002B2233 /* PWSetTagsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWSetTagsRequest.h; sourceTree = "<group>"; };
+		500B661915DD5B53002B2233 /* PWSetTagsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWSetTagsRequest.m; sourceTree = "<group>"; };
+		500B661C15DD5B9E002B2233 /* PWRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWRequest.h; sourceTree = "<group>"; };
+		500B661D15DD5B9E002B2233 /* PWRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWRequest.m; sourceTree = "<group>"; };
+		500B662015DD5BBA002B2233 /* PWRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWRequestManager.h; sourceTree = "<group>"; };
+		500B662115DD5BBA002B2233 /* PWRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWRequestManager.m; sourceTree = "<group>"; };
+		500B662415DD5D43002B2233 /* PWRegisterDeviceRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWRegisterDeviceRequest.h; sourceTree = "<group>"; };
+		500B662515DD5D43002B2233 /* PWRegisterDeviceRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWRegisterDeviceRequest.m; sourceTree = "<group>"; };
+		500B662815DD5FE3002B2233 /* PWPushStatRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWPushStatRequest.h; sourceTree = "<group>"; };
+		500B662915DD5FE3002B2233 /* PWPushStatRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWPushStatRequest.m; sourceTree = "<group>"; };
 		ABB6AF7014D2AED300D0A064 /* libPushNotificationManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPushNotificationManager.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABB6AF7314D2AED300D0A064 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		ABB6AF7614D2AED300D0A064 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -71,6 +95,18 @@
 		ABB6AF7914D2AED300D0A064 /* PushNotificationManager */ = {
 			isa = PBXGroup;
 			children = (
+				500B662815DD5FE3002B2233 /* PWPushStatRequest.h */,
+				500B662915DD5FE3002B2233 /* PWPushStatRequest.m */,
+				500B662415DD5D43002B2233 /* PWRegisterDeviceRequest.h */,
+				500B662515DD5D43002B2233 /* PWRegisterDeviceRequest.m */,
+				500B662015DD5BBA002B2233 /* PWRequestManager.h */,
+				500B662115DD5BBA002B2233 /* PWRequestManager.m */,
+				500B661C15DD5B9E002B2233 /* PWRequest.h */,
+				500B661D15DD5B9E002B2233 /* PWRequest.m */,
+				500B661815DD5B53002B2233 /* PWSetTagsRequest.h */,
+				500B661915DD5B53002B2233 /* PWSetTagsRequest.m */,
+				500B661315DD5888002B2233 /* MyAppDelegate.h */,
+				500B661415DD5888002B2233 /* MyAppDelegate.m */,
 				ABB6AF7C14D2AED300D0A064 /* PushNotificationManager.h */,
 				ABB6AF7D14D2AED300D0A064 /* PushNotificationManager.m */,
 				ABB6AF7A14D2AED300D0A064 /* Supporting Files */,
@@ -93,6 +129,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				500B661515DD5888002B2233 /* MyAppDelegate.h in Headers */,
+				500B661A15DD5B53002B2233 /* PWSetTagsRequest.h in Headers */,
+				500B661E15DD5B9E002B2233 /* PWRequest.h in Headers */,
+				500B662215DD5BBA002B2233 /* PWRequestManager.h in Headers */,
+				500B662615DD5D43002B2233 /* PWRegisterDeviceRequest.h in Headers */,
+				500B662A15DD5FE3002B2233 /* PWPushStatRequest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,7 +164,7 @@
 		ABB6AF6714D2AED300D0A064 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = "fever9@gmail.com";
 			};
 			buildConfigurationList = ABB6AF6A14D2AED300D0A064 /* Build configuration list for PBXProject "PushNotificationManager" */;
@@ -148,6 +190,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABB6AF7E14D2AED300D0A064 /* PushNotificationManager.m in Sources */,
+				500B661615DD5888002B2233 /* MyAppDelegate.m in Sources */,
+				500B661B15DD5B53002B2233 /* PWSetTagsRequest.m in Sources */,
+				500B661F15DD5B9E002B2233 /* PWRequest.m in Sources */,
+				500B662315DD5BBA002B2233 /* PWRequestManager.m in Sources */,
+				500B662715DD5D43002B2233 /* PWRegisterDeviceRequest.m in Sources */,
+				500B662B15DD5FE3002B2233 /* PWPushStatRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,6 +250,7 @@
 		ABB6AF8214D2AED300D0A064 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationManager/PushNotificationManager-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -211,6 +260,7 @@
 		ABB6AF8314D2AED300D0A064 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationManager/PushNotificationManager-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -17,37 +17,35 @@ import android.webkit.WebViewClient;
 
 public class PushWebview extends Activity
 {
-    private WebView webView;
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+		WebView webView = new WebView(this);
 
-        webView = new WebView(this);
+		String url = getIntent().getStringExtra("url");
 
-        String url = getIntent().getStringExtra("url");
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.setWebViewClient(new HelloWebViewClient());
 
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new HelloWebViewClient());
+		webView.loadUrl(url);
 
-        webView.loadUrl(url);
+		setContentView(webView);
+	}
 
-        setContentView(webView);
-    }
+	private class HelloWebViewClient extends WebViewClient
+	{
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url)
+		{
+			//finish activity when browser starts
+			finish();
 
-    private class HelloWebViewClient extends WebViewClient
-    {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url)
-        {
-            //finish activity when browser starts
-            finish();
+			Uri uri = Uri.parse(url);
+			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			startActivity(intent);
 
-            Uri uri = Uri.parse(url);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
-
-            return false;
-        }
-    }
+			return false;
+		}
+	}
 }

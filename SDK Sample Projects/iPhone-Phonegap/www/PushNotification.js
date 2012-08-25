@@ -18,6 +18,16 @@
 		cordova.exec(success, fail, "PushNotification", "registerDevice", config ? [config] : []);
 	};
 
+	// Call this to set tags for the device
+	PushNotification.prototype.setTags = function(config, success, fail) {
+		cordova.exec(success, fail, "PushNotification", "setTags", config ? [config] : []);
+	};
+
+	// Call this to send geo location for the device
+	PushNotification.prototype.sendLocation = function(config, success, fail) {
+		cordova.exec(success, fail, "PushNotification", "sendLocation", config ? [config] : []);
+	};
+
 	//Android Only----
 	PushNotification.prototype.unregisterDevice = function(success, fail) {
 		cordova.exec(success, fail, "PushNotification", "unregisterDevice", []);
@@ -65,21 +75,21 @@ function initPushwoosh()
 	var pushNotification = window.plugins.pushNotification;
 	pushNotification.onDeviceReady();
 	
-	pushNotification.registerDevice({alert:true, badge:true, sound:true, appid:"PUSHWOOSH_APP_CODE", appname:"APP_NAME"},
+	pushNotification.registerDevice({alert:true, badge:true, sound:true, pw_appid:"PUSHWOOSH_APP_CODE", appname:"APP_NAME"},
 									function(status) {
-									var deviceToken = status['deviceToken'];
-									console.warn('registerDevice: ' + deviceToken);
+										var deviceToken = status['deviceToken'];
+										console.warn('registerDevice: ' + deviceToken);
 									},
 									function(status) {
-									console.warn('failed to register : ' + JSON.stringify(status));
-									navigator.notification.alert(JSON.stringify(['failed to register ', status]));
+										console.warn('failed to register : ' + JSON.stringify(status));
+										navigator.notification.alert(JSON.stringify(['failed to register ', status]));
 									});
 	
 	pushNotification.setApplicationIconBadgeNumber(0);
 	
 	document.addEventListener('push-notification', function(event) {
-							  var notification = event.notification;
-							  navigator.notification.alert(notification.aps.alert);
-							  pushNotification.setApplicationIconBadgeNumber(0);
+									var notification = event.notification;
+									navigator.notification.alert(notification.aps.alert);
+									pushNotification.setApplicationIconBadgeNumber(0);
 							  });
 }

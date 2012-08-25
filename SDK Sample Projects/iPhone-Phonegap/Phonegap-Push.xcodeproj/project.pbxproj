@@ -43,6 +43,14 @@
 		30A0434914DC770100060A13 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 30A0434614DC770100060A13 /* Localizable.strings */; };
 		30E1352710E2C1420031B30D /* Cordova.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30E1352610E2C1420031B30D /* Cordova.plist */; };
 		30E5649213A7FCAF007403D8 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E5649113A7FCAF007403D8 /* CoreMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		500B666A15E42B71002B2233 /* HtmlWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B665915E42B71002B2233 /* HtmlWebViewController.m */; };
+		500B666C15E42B71002B2233 /* PushNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B665D15E42B71002B2233 /* PushNotificationManager.m */; };
+		500B666D15E42B71002B2233 /* PWGetNearestZoneRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B665F15E42B71002B2233 /* PWGetNearestZoneRequest.m */; };
+		500B666E15E42B71002B2233 /* PWPushStatRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B666115E42B71002B2233 /* PWPushStatRequest.m */; };
+		500B666F15E42B71002B2233 /* PWRegisterDeviceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B666315E42B71002B2233 /* PWRegisterDeviceRequest.m */; };
+		500B667015E42B71002B2233 /* PWRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B666515E42B71002B2233 /* PWRequest.m */; };
+		500B667115E42B71002B2233 /* PWRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B666715E42B71002B2233 /* PWRequestManager.m */; };
+		500B667215E42B71002B2233 /* PWSetTagsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B666915E42B71002B2233 /* PWSetTagsRequest.m */; };
 		50BC177815C43E5400337F46 /* PushNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BC177715C43E5400337F46 /* PushNotification.m */; };
 /* End PBXBuildFile section */
 
@@ -119,6 +127,22 @@
 		30E1352610E2C1420031B30D /* Cordova.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Cordova.plist; path = ../Cordova.plist; sourceTree = "<group>"; };
 		30E5649113A7FCAF007403D8 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* Phonegap-Push-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Phonegap-Push-Prefix.pch"; sourceTree = "<group>"; };
+		500B665815E42B71002B2233 /* HtmlWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HtmlWebViewController.h; sourceTree = "<group>"; };
+		500B665915E42B71002B2233 /* HtmlWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HtmlWebViewController.m; sourceTree = "<group>"; };
+		500B665C15E42B71002B2233 /* PushNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotificationManager.h; sourceTree = "<group>"; };
+		500B665D15E42B71002B2233 /* PushNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNotificationManager.m; sourceTree = "<group>"; };
+		500B665E15E42B71002B2233 /* PWGetNearestZoneRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWGetNearestZoneRequest.h; sourceTree = "<group>"; };
+		500B665F15E42B71002B2233 /* PWGetNearestZoneRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWGetNearestZoneRequest.m; sourceTree = "<group>"; };
+		500B666015E42B71002B2233 /* PWPushStatRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWPushStatRequest.h; sourceTree = "<group>"; };
+		500B666115E42B71002B2233 /* PWPushStatRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWPushStatRequest.m; sourceTree = "<group>"; };
+		500B666215E42B71002B2233 /* PWRegisterDeviceRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWRegisterDeviceRequest.h; sourceTree = "<group>"; };
+		500B666315E42B71002B2233 /* PWRegisterDeviceRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWRegisterDeviceRequest.m; sourceTree = "<group>"; };
+		500B666415E42B71002B2233 /* PWRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWRequest.h; sourceTree = "<group>"; };
+		500B666515E42B71002B2233 /* PWRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWRequest.m; sourceTree = "<group>"; };
+		500B666615E42B71002B2233 /* PWRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWRequestManager.h; sourceTree = "<group>"; };
+		500B666715E42B71002B2233 /* PWRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWRequestManager.m; sourceTree = "<group>"; };
+		500B666815E42B71002B2233 /* PWSetTagsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWSetTagsRequest.h; sourceTree = "<group>"; };
+		500B666915E42B71002B2233 /* PWSetTagsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWSetTagsRequest.m; sourceTree = "<group>"; };
 		50BC177615C43E5400337F46 /* PushNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotification.h; sourceTree = "<group>"; };
 		50BC177715C43E5400337F46 /* PushNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNotification.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Phonegap-Push-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Phonegap-Push-Info.plist"; path = "../Phonegap-Push-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
@@ -265,6 +289,22 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				500B665815E42B71002B2233 /* HtmlWebViewController.h */,
+				500B665915E42B71002B2233 /* HtmlWebViewController.m */,
+				500B665C15E42B71002B2233 /* PushNotificationManager.h */,
+				500B665D15E42B71002B2233 /* PushNotificationManager.m */,
+				500B665E15E42B71002B2233 /* PWGetNearestZoneRequest.h */,
+				500B665F15E42B71002B2233 /* PWGetNearestZoneRequest.m */,
+				500B666015E42B71002B2233 /* PWPushStatRequest.h */,
+				500B666115E42B71002B2233 /* PWPushStatRequest.m */,
+				500B666215E42B71002B2233 /* PWRegisterDeviceRequest.h */,
+				500B666315E42B71002B2233 /* PWRegisterDeviceRequest.m */,
+				500B666415E42B71002B2233 /* PWRequest.h */,
+				500B666515E42B71002B2233 /* PWRequest.m */,
+				500B666615E42B71002B2233 /* PWRequestManager.h */,
+				500B666715E42B71002B2233 /* PWRequestManager.m */,
+				500B666815E42B71002B2233 /* PWSetTagsRequest.h */,
+				500B666915E42B71002B2233 /* PWSetTagsRequest.m */,
 				50BC177615C43E5400337F46 /* PushNotification.h */,
 				50BC177715C43E5400337F46 /* PushNotification.m */,
 			);
@@ -448,6 +488,14 @@
 				1D3623260D0F684500981E51 /* AppDelegate.m in Sources */,
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
 				50BC177815C43E5400337F46 /* PushNotification.m in Sources */,
+				500B666A15E42B71002B2233 /* HtmlWebViewController.m in Sources */,
+				500B666C15E42B71002B2233 /* PushNotificationManager.m in Sources */,
+				500B666D15E42B71002B2233 /* PWGetNearestZoneRequest.m in Sources */,
+				500B666E15E42B71002B2233 /* PWPushStatRequest.m in Sources */,
+				500B666F15E42B71002B2233 /* PWRegisterDeviceRequest.m in Sources */,
+				500B667015E42B71002B2233 /* PWRequest.m in Sources */,
+				500B667115E42B71002B2233 /* PWRequestManager.m in Sources */,
+				500B667215E42B71002B2233 /* PWSetTagsRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

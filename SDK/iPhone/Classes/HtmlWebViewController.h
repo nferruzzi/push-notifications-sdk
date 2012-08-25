@@ -1,5 +1,7 @@
 //
 //  HtmlWebViewController.h
+//  Pushwoosh SDK
+//  (c) Pushwoosh 2012
 //
 
 #import <UIKit/UIKit.h>

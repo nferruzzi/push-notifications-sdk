@@ -1,9 +1,17 @@
 //
 //  PushNotificationManager.m
+//  Pushwoosh SDK
+//  (c) Pushwoosh 2012
 //
 
 #import "PushNotificationManager.h"
+
 #import "HtmlWebViewController.h"
+#import "PWRequestManager.h"
+#import "PWRegisterDeviceRequest.h"
+#import "PWSetTagsRequest.h"
+#import "PWPushStatRequest.h"
+#import "PWGetNearestZoneRequest.h"
 
 #include <sys/socket.h> // Per msqr
 #include <sys/sysctl.h>
@@ -11,8 +19,8 @@
 #include <net/if_dl.h>
 #import <CommonCrypto/CommonDigest.h>
 
-
-#define kServicePushNotificationUrl @"https://cp.pushwoosh.com/json/1.2/registerDevice"
+#define kServicePushNotificationUrl @"https://cp.pushwoosh.com/json/1.3/registerDevice"
+#define kServiceSetTagsUrl @"https://cp.pushwoosh.com/json/1.3/setTags"
 #define kServiceHtmlContentFormatUrl @"https://cp.pushwoosh.com/content/%@"
 
 @implementation PushNotificationManager
@@ -120,6 +128,11 @@
 		self.navController = [UIApplication sharedApplication].keyWindow.rootViewController;
 		internalIndex = 0;
 		pushNotifications = [[NSMutableDictionary alloc] init];
+		
+		[[NSUserDefaults standardUserDefaults] setObject:_appCode forKey:@"Pushwoosh_APPID"];
+		if(_appName) {
+			[[NSUserDefaults standardUserDefaults] setObject:_appName forKey:@"Pushwoosh_APPNAME"];
+		}
 	}
 	
 	return self;
@@ -133,9 +146,41 @@
 		self.appName = _appName;
 		internalIndex = 0;
 		pushNotifications = [[NSMutableDictionary alloc] init];
+		
+		[[NSUserDefaults standardUserDefaults] setObject:_appCode forKey:@"Pushwoosh_APPID"];
+		if(_appName) {
+			[[NSUserDefaults standardUserDefaults] setObject:_appName forKey:@"Pushwoosh_APPNAME"];
+		}
 	}
 	
 	return self;
+}
+
++ (void)initializeWithAppCode:(NSString *)appCode appName:(NSString *)appName {
+	[[NSUserDefaults standardUserDefaults] setObject:appCode forKey:@"Pushwoosh_APPID"];
+	
+	if(appName) {
+		[[NSUserDefaults standardUserDefaults] setObject:appName forKey:@"Pushwoosh_APPNAME"];
+	}
+}
+
++ (PushNotificationManager *)pushManager {
+	static PushNotificationManager * instance = nil;
+	
+	if(instance == nil) {
+		NSString * appid = [[NSUserDefaults standardUserDefaults] objectForKey:@"Pushwoosh_APPID"];
+		
+		if(!appid)
+			return nil;
+		
+		NSString * appname = [[NSUserDefaults standardUserDefaults] objectForKey:@"Pushwoosh_APPNAME"];
+		if(!appname)
+			appname = @"";
+		
+		instance = [[PushNotificationManager alloc] initWithApplicationCode:appid appName:appname ];
+	}
+	
+	return instance;
 }
 
 - (void) closeAction {
@@ -183,39 +228,21 @@
 	}
 	
 	[languagesArr release]; languagesArr = nil;
-    
-    NSString *udid = [self uniqueGlobalDeviceIdentifier];
 	
-	//create JSON data 
-	NSError *error = nil;
-	NSString *jsonRequestData = [NSString stringWithFormat:@"{\"request\":{\"language\":\"%@\",\"application\":\"%@\",\"device_id\":\"%@\", \"hw_id\":\"%@\", \"timezone\":%d, \"device_type\":1}}",
-                                 appLocale, appCode, deviceID, udid, [[NSTimeZone localTimeZone] secondsFromGMT]];
+	PWRegisterDeviceRequest *request = [[PWRegisterDeviceRequest alloc] init];
+	request.appId = appCode;
+	request.hwid = [self uniqueGlobalDeviceIdentifier];
+	request.pushToken = deviceID;
+	request.language = appLocale;
+	request.timeZone = [NSString stringWithFormat:@"%d", [[NSTimeZone localTimeZone] secondsFromGMT]];
 	
-	if (error) {
-		NSLog(@"Send Data Error: %@", error);
-		return;
+	if ([[PWRequestManager sharedManager] sendRequest:request]) {
+		NSLog(@"Registered for push notifications: %@", deviceID);
+	} else {
+		NSLog(@"Registered for push notifications failed");
 	}
 	
-	NSLog(@"Sending request: %@", jsonRequestData);
-	NSLog(@"Opening url: %@", kServicePushNotificationUrl);
-	
-	NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:kServicePushNotificationUrl]];
-	[urlRequest setHTTPMethod:@"POST"];
-	[urlRequest addValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[urlRequest setHTTPBody:[jsonRequestData dataUsingEncoding:NSUTF8StringEncoding]];
-	
-	//Send data to server
-	NSURLResponse *response = nil;
-	NSData * responseData = [NSURLConnection sendSynchronousRequest:urlRequest returningResponse:&response error:&error];
-	[urlRequest release]; urlRequest = nil;
-	
-	NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-	NSLog(@"Response string: %@", responseString);
-	[responseString release]; responseString = nil;
-	
-	NSLog(@"Error: %@", error);
-	NSLog(@"Registered for push notifications: %@", deviceID);
-	
+	[request release]; request = nil;
 	[pool release]; pool = nil;
 }
 
@@ -256,7 +283,10 @@
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:linkUrl]];
 	}
 	
-	[delegate onPushAccepted:self withNotification:lastPushDict];
+	if([delegate respondsToSelector:@selector(onPushAccepted: withNotification:)] ) {
+		[delegate onPushAccepted:self withNotification:lastPushDict];
+	}
+	
 	[pushNotifications removeObjectForKey:[NSNumber numberWithInt:alertView.tag]];
 }
 
@@ -281,8 +311,10 @@
 		isPushOnStart = YES;
 	}
 	
-	if([delegate respondsToSelector:@selector(onPushReceived: onStart:)] ) {
-		[delegate onPushReceived:self onStart:isPushOnStart];
+	[self performSelectorInBackground:@selector(sendStatsBackground) withObject:nil];
+	
+	if([delegate respondsToSelector:@selector(onPushReceived: withNotification: onStart:)] ) {
+		[delegate onPushReceived:self withNotification:userInfo onStart:isPushOnStart];
 		return YES;
 	}
 
@@ -311,7 +343,9 @@
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:linkUrl]];
 	}
 	
-	[delegate onPushAccepted:self withNotification:userInfo];
+	if([delegate respondsToSelector:@selector(onPushAccepted: withNotification:)] ) {
+		[delegate onPushAccepted:self withNotification:userInfo];
+	}
 	return YES;
 }
 
@@ -323,6 +357,71 @@
 	return [pushNotification objectForKey:@"u"];
 }
 
+- (void) sendStatsBackground {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+	PWPushStatRequest *request = [[PWPushStatRequest alloc] init];
+	request.appId = appCode;
+	request.hwid = [self uniqueGlobalDeviceIdentifier];
+	
+	if ([[PWRequestManager sharedManager] sendRequest:request]) {
+		NSLog(@"sendStats completed");
+	} else {
+		NSLog(@"sendStats failed");
+	}
+	
+	[request release]; request = nil;
+	
+	[pool release]; pool = nil;
+}
+
+- (void) sendTagsBackground: (NSDictionary *) tags {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+    PWSetTagsRequest *request = [[PWSetTagsRequest alloc] init];
+	request.appId = appCode;
+	request.hwid = [self uniqueGlobalDeviceIdentifier];
+    request.tags = tags;
+	
+	if ([[PWRequestManager sharedManager] sendRequest:request]) {
+		NSLog(@"setTags completed");
+	} else {
+		NSLog(@"setTags failed");
+	}
+	
+	[request release]; request = nil;
+
+	
+	[pool release]; pool = nil;
+}
+
+- (void) sendLocation: (CLLocation *) location {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	NSLog(@"Sending location: %@", location);
+	
+    PWGetNearestZoneRequest *request = [[PWGetNearestZoneRequest alloc] init];
+	request.appId = appCode;
+	request.hwid = [self uniqueGlobalDeviceIdentifier];
+    request.coordinate = location.coordinate;
+	
+	if ([[PWRequestManager sharedManager] sendRequest:request]) {
+		NSLog(@"getNearestZone completed");
+	} else {
+		NSLog(@"getNearestZone failed");
+	}
+	
+	[request release]; request = nil;
+	
+	NSLog(@"Locaiton sent");
+	
+	[pool release]; pool = nil;
+}
+
+- (void) setTags: (NSDictionary *) tags {
+	[self performSelectorInBackground:@selector(sendTagsBackground:) withObject:tags];
+}
+
 - (void) dealloc {
 	self.delegate = nil;
 	self.appCode = nil;
@@ -330,6 +429,101 @@
 	self.pushNotifications = nil;
 	
 	[super dealloc];
+}
+
+@end
+
+#import <objc/runtime.h>
+#import "MyAppDelegate.h"
+
+@interface MyAppDelegate (Pushwoosh)
+- (void)application:(UIApplication *)application newDidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken;
+- (void)application:(UIApplication *)application newDidFailToRegisterForRemoteNotificationsWithError:(NSError *)err;
+- (void)application:(UIApplication *)application newDidReceiveRemoteNotification:(NSDictionary *)userInfo;
+
+- (BOOL)application:(UIApplication *)application newDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
+@end
+
+@implementation MyAppDelegate(Pushwoosh)
+
+- (void)application:(UIApplication *)application newDidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+	[self application:application newDidRegisterForRemoteNotificationsWithDeviceToken:devToken];
+	
+	[[PushNotificationManager pushManager] handlePushRegistration:devToken];
+}
+
+- (void)application:(UIApplication *)application newDidFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+	[self application:application newDidFailToRegisterForRemoteNotificationsWithError:err];
+	
+	NSLog(@"Error registering for push notifications. Error: %@", err);
+}
+
+- (void)application:(UIApplication *)application newDidReceiveRemoteNotification:(NSDictionary *)userInfo {
+	[self application:application newDidReceiveRemoteNotification:userInfo];
+	
+	[[PushNotificationManager pushManager] handlePushReceived:userInfo];
+}
+
+- (BOOL)application:(UIApplication *)application newDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+	BOOL result = [self application:application newDidFinishLaunchingWithOptions:launchOptions];
+	
+	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+	
+	if(![PushNotificationManager pushManager].delegate) {
+		[PushNotificationManager pushManager].delegate = (NSObject<PushNotificationDelegate> *)self;
+	}
+	
+	[[PushNotificationManager pushManager] handlePushReceived:launchOptions];
+	[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+	
+	return result;
+}
+
+void dynamicMethodIMP(id self, SEL _cmd, id application, id param) {
+	if (_cmd == @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:)) {
+		[[PushNotificationManager pushManager] handlePushRegistration:param];
+		return;
+    }
+	
+	if (_cmd == @selector(application:didFailToRegisterForRemoteNotificationsWithError:)) {
+		NSLog(@"Error registering for push notifications. Error: %@", param);
+		return;
+    }
+	
+	if (_cmd == @selector(application:didReceiveRemoteNotification:)) {
+		[[PushNotificationManager pushManager] handlePushReceived:param];
+		return;
+    }
+}
+
++ (void)load {
+	method_exchangeImplementations(class_getInstanceMethod(self, @selector(application:didFinishLaunchingWithOptions:)), class_getInstanceMethod(self, @selector(application:newDidFinishLaunchingWithOptions:)));
+	
+	//if methods does not exist - provide default implementation, otherwise swap the implementation
+	Method method = nil;
+	method = class_getInstanceMethod(self, @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:));
+	if(method) {
+		method_exchangeImplementations(method, class_getInstanceMethod(self, @selector(application:newDidRegisterForRemoteNotificationsWithDeviceToken:)));
+	}
+	else {
+		class_addMethod(self, @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:), (IMP)dynamicMethodIMP, "v@:::");
+	}
+	
+	method = class_getInstanceMethod(self, @selector(application:didFailToRegisterForRemoteNotificationsWithError:));
+	if(method) {
+		method_exchangeImplementations(class_getInstanceMethod(self, @selector(application:didFailToRegisterForRemoteNotificationsWithError:)), class_getInstanceMethod(self, @selector(application:newDidFailToRegisterForRemoteNotificationsWithError:)));
+	}
+	else {
+		class_addMethod(self, @selector(application:didFailToRegisterForRemoteNotificationsWithError:), (IMP)dynamicMethodIMP, "v@:::");
+	}
+	
+	method = class_getInstanceMethod(self, @selector(application:didReceiveRemoteNotification:));
+	if(method) {
+		method_exchangeImplementations(class_getInstanceMethod(self, @selector(application:didReceiveRemoteNotification:)), class_getInstanceMethod(self, @selector(application:newDidReceiveRemoteNotification:)));
+	}
+	else {
+		class_addMethod(self, @selector(application:didReceiveRemoteNotification:), (IMP)dynamicMethodIMP, "v@:::");
+	}
 }
 
 @end

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		50A980B815E81363003579A4 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50A980B715E81363003579A4 /* IOKit.framework */; };
 		AB84567D14D96F4C00A17648 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB84567C14D96F4C00A17648 /* Cocoa.framework */; };
 		AB84568714D96F4C00A17648 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AB84568514D96F4C00A17648 /* InfoPlist.strings */; };
 		AB84568914D96F4C00A17648 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AB84568814D96F4C00A17648 /* main.m */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		50A980B715E81363003579A4 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		AB84567814D96F4C00A17648 /* PushNotificationsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PushNotificationsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB84567C14D96F4C00A17648 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		AB84567F14D96F4C00A17648 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -55,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50A980B815E81363003579A4 /* IOKit.framework in Frameworks */,
 				AB8456A714D96FFE00A17648 /* libPushNotificationManager.a in Frameworks */,
 				AB84567D14D96F4C00A17648 /* Cocoa.framework in Frameworks */,
 			);
@@ -66,6 +69,7 @@
 		AB84566D14D96F4C00A17648 = {
 			isa = PBXGroup;
 			children = (
+				50A980B715E81363003579A4 /* IOKit.framework */,
 				AB84569D14D96FE400A17648 /* PushNotificationManager.xcodeproj */,
 				AB84568214D96F4C00A17648 /* PushNotificationsApp */,
 				AB84567B14D96F4C00A17648 /* Frameworks */,
@@ -158,7 +162,7 @@
 		AB84566F14D96F4C00A17648 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = "fever9@gmail.com";
 			};
 			buildConfigurationList = AB84567214D96F4C00A17648 /* Build configuration list for PBXProject "PushNotificationsApp" */;
@@ -283,7 +287,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PROVISIONING_PROFILE = "225AF5D7-9071-4545-9F78-3D783FCC7EC7";
+				PROVISIONING_PROFILE = "58C5469A-CED2-447B-B08B-8CFD069EA4D9";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -309,7 +313,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PROVISIONING_PROFILE = "225AF5D7-9071-4545-9F78-3D783FCC7EC7";
+				PROVISIONING_PROFILE = "58C5469A-CED2-447B-B08B-8CFD069EA4D9";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -317,6 +321,7 @@
 		AB84569714D96F4C00A17648 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationsApp/PushNotificationsApp-Prefix.pch";
 				INFOPLIST_FILE = "PushNotificationsApp/PushNotificationsApp-Info.plist";
@@ -328,6 +333,7 @@
 		AB84569814D96F4C00A17648 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationsApp/PushNotificationsApp-Prefix.pch";
 				INFOPLIST_FILE = "PushNotificationsApp/PushNotificationsApp-Info.plist";

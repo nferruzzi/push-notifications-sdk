@@ -11,8 +11,38 @@ var app = {
         initPushwoosh();
 
         app.report('deviceready');
+		
+		var pushNotification = window.plugins.pushNotification;
+		pushNotification.setTags({deviceName:"hello", deviceId:10},
+										function(status) {
+											console.warn('setTags success');
+										},
+										function(status) {
+											console.warn('setTags failed');
+										});
+
+		
+		var onSuccess = function(position) {
+			pushNotification.sendLocation({lat:position.coords.latitude, lon:position.coords.longitude},
+									 function(status) {
+										  console.warn('sendLocation success');
+									 },
+									 function(status) {
+										  console.warn('sendLocation failed');
+									 });
+
+		};
+		
+		// onError Callback receives a PositionError object
+		//
+		function onError(error) {
+			alert('code: '    + error.code    + '\n' +
+				  'message: ' + error.message + '\n');
+		}
+		
+		navigator.geolocation.getCurrentPosition(onSuccess, onError);
     },
-    report: function(id) { 
+    report: function(id) {
         console.log("report:" + id);
         // hide the .pending <p> and show the .complete <p>
         document.querySelector('#' + id + ' .pending').className += ' hide';

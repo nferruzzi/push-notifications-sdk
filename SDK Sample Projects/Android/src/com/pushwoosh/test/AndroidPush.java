@@ -24,7 +24,7 @@ public class AndroidPush extends Activity
         setContentView(R.layout.main);
 
         PushManager pushManager = new PushManager(this, APP_ID, SENDER_ID);
-        pushManager.onStartup(savedInstanceState, this);
+        pushManager.onStartup(this);
 
         checkMessage(getIntent());
     }

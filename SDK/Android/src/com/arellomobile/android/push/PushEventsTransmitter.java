@@ -21,30 +21,30 @@ public class PushEventsTransmitter
         context.startActivity(notifyIntent);
     }
 
-    public static void onRegistered(final Context context, String registrationId)
+    static void onRegistered(final Context context, String registrationId)
     {
         String alertString = "Registered. RegistrationId is " + registrationId;
         transmit(context, registrationId, PushManager.REGISTER_EVENT);
     }
 
-    public static void onRegisterError(final Context context, String errorId)
+    static void onRegisterError(final Context context, String errorId)
     {
         String alertString = "Register error. Error message is " + errorId;
         transmit(context, errorId, PushManager.REGISTER_ERROR_EVENT);
     }
 
-    public static void onUnregistered(final Context context, String registrationId)
+    static void onUnregistered(final Context context, String registrationId)
     {
         String alertString = "Unregistered. RegistrationId is " + registrationId;
         transmit(context, registrationId, PushManager.UNREGISTER_EVENT);
     }
 
-    public static void onUnregisteredError(Context context, String errorId)
+    static void onUnregisteredError(Context context, String errorId)
     {
         transmit(context, errorId, PushManager.UNREGISTER_ERROR_EVENT);
     }
 
-    public static void onMessageReceive(final Context context, String message)
+    static void onMessageReceive(final Context context, String message)
     {
         transmit(context, message, PushManager.PUSH_RECEIVE_EVENT);
     }
