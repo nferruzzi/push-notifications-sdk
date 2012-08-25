@@ -20,7 +20,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 import com.arellomobile.android.push.preference.SoundType;
 import com.arellomobile.android.push.preference.VibrateType;
 import com.arellomobile.android.push.utils.GeneralUtils;
@@ -76,9 +75,6 @@ public class PushGCMIntentService extends GCMBaseIntentService
 	protected void onDeletedMessages(Context context, int total)
 	{
 		Log.i(TAG, "Received deleted messages notification");
-
-		// TODO
-		Toast.makeText(context, "onDeletedMessages", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override

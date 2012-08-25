@@ -18,13 +18,32 @@
 		cordova.exec(success, fail, "PushNotification", "registerDevice", config ? [config] : []);
 	};
 
+	// Call this to set tags for the device
+	PushNotification.prototype.setTags = function(config, success, fail) {
+		cordova.exec(success, fail, "PushNotification", "setTags", config ? [config] : []);
+	};
+
 	//Android Only----
 	PushNotification.prototype.unregisterDevice = function(success, fail) {
 		cordova.exec(success, fail, "PushNotification", "unregisterDevice", []);
 	};
+	
+	PushNotification.prototype.sendLocation = function(success, fail) {
+		cordova.exec(success, fail, "PushNotification", "startGeoPushes", []);
+	};
+
+	PushNotification.prototype.sendLocation = function(success, fail) {
+		cordova.exec(success, fail, "PushNotification", "stopGeoPushes", []);
+	};
+
 	//Android End----
 	
 	//iOS only----
+	// Call this to send geo location for the device
+	PushNotification.prototype.sendLocation = function(config, success, fail) {
+		cordova.exec(success, fail, "PushNotification", "sendLocation", config ? [config] : []);
+	};
+
 	PushNotification.prototype.onDeviceReady = function() {
 		cordova.exec(null, null, "PushNotification", "onDeviceReady", []);
 	};
@@ -64,7 +83,7 @@ function initPushwoosh()
 {
 	var pushNotification = window.plugins.pushNotification;
 	// CHANGE projectid & appid
-	pushNotification.registerDevice({ projectid: "60756016005", appid : "4fc89b6d14a655.46488481" },
+	pushNotification.registerDevice({ projectid: "", appid : "" },
 									function(status) {
 										var pushToken = status;
 										console.warn('push token: ' + pushToken);

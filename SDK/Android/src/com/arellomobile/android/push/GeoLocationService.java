@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
-import android.widget.Toast;
 import com.arellomobile.android.push.data.PushZoneLocation;
 import com.arellomobile.android.push.utils.ExecutorHelper;
 import com.arellomobile.android.push.utils.WorkerTask;
@@ -103,12 +102,10 @@ public class GeoLocationService extends Service
 		{
 			if (!mIfUpdating && GCMRegistrar.isRegisteredOnServer(this))
 			{
-				Toast.makeText(getApplicationContext(), "Location update", Toast.LENGTH_SHORT).show();
 				if (null != mOldLocation && location.distanceTo(mOldLocation) < mMinDistance)
 				{
 					return;
 				}
-				Toast.makeText(getApplicationContext(), "Sent pushwoosh geo zone change", Toast.LENGTH_LONG).show();
 
 				mOldLocation = location;
 

@@ -46,7 +46,7 @@ public class Version__1_3 implements VersionHelper
 	}
 
 	@Override
-	public Map<String, Object> getSentPushStatData(Context context, String hash)
+	public Map<String, Object> getSendPushStatData(Context context, String hash)
 	{
 		Map<String, Object> data = new HashMap<String, Object>();
 
@@ -58,7 +58,7 @@ public class Version__1_3 implements VersionHelper
 	}
 
 	@Override
-	public Map<String, Object> getSentTagsData(Context context)
+	public Map<String, Object> getSendTagsData(Context context)
 	{
 		Map<String, Object> data = new HashMap<String, Object>();
 

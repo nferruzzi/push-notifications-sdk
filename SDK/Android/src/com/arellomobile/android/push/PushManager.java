@@ -118,9 +118,22 @@ public class PushManager
 				{
 					registerOnPushWoosh(context, regId);
 				}
+				else
+				{
+					PushEventsTransmitter.onRegistered(context, regId);
+				}
 			}
 		}
-		//		mContext.startService(new Intent(mContext, GeoLocationService.class));
+	}
+	
+	public void startTrackingGeoPushes()
+	{
+		mContext.startService(new Intent(mContext, GeoLocationService.class));
+	}
+
+	public void stopTrackingGeoPushes()
+	{
+		mContext.stopService(new Intent(mContext, GeoLocationService.class));
 	}
 
 	public void unregister()
@@ -150,13 +163,13 @@ public class PushManager
 	 * @param tags - tags to sent. Value can be String or Integer only - if not Exception will be thrown
 	 * @return map of wrong tags. key is name of the tag
 	 */
-	public Map<String, String> sentTags(Context context, Map<String, Object> tags) throws PushWooshException
+	public Map<String, String> sendTags(Context context, Map<String, Object> tags) throws PushWooshException
 	{
 		Map<String, String> wrongTags = new HashMap<String, String>();
 
 		try
 		{
-			JSONArray wrongTagsArray = DeviceFeature2_5.sentTags(context, tags);
+			JSONArray wrongTagsArray = DeviceFeature2_5.sendTags(context, tags);
 
 			for (int i = 0; i < wrongTagsArray.length(); ++i)
 			{
@@ -252,7 +265,7 @@ public class PushManager
 		}
 
 		// send pushwoosh callback
-		sentPushStat(mContext, pushBundle.getString("p"));
+		sendPushStat(mContext, pushBundle.getString("p"));
 
 		return true;
 	}
@@ -288,7 +301,7 @@ public class PushManager
 		ExecutorHelper.executeAsyncTask(mRegistrationAsyncTask);
 	}
 
-	private void sentPushStat(Context context, final String hash)
+	private void sendPushStat(Context context, final String hash)
 	{
 		AsyncTask<Void, Void, Void> task;
 		try
@@ -298,14 +311,14 @@ public class PushManager
 				@Override
 				protected void doWork(Context context)
 				{
-					DeviceFeature2_5.sentPushStat(context, hash);
+					DeviceFeature2_5.sendPushStat(context, hash);
 				}
 			};
 		}
 		catch (Throwable e)
 		{
 			// we are not in UI thread. Simple run our registration
-			DeviceFeature2_5.sentPushStat(context, hash);
+			DeviceFeature2_5.sendPushStat(context, hash);
 			return;
 		}
 		ExecutorHelper.executeAsyncTask(task);

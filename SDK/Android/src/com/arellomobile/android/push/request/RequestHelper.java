@@ -45,18 +45,18 @@ public class RequestHelper
 		return versionHelper.getRegistrationUnregistrationData(context, deviceRegistrationID);
 	}
 
-	public static Map<String, Object> getSentPushStatData(Context context, String hash, String pushVersion)
+	public static Map<String, Object> getSendPushStatData(Context context, String hash, String pushVersion)
 	{
 		VersionHelper versionHelper = getVersionHelper(pushVersion);
 
-		return versionHelper.getSentPushStatData(context, hash);
+		return versionHelper.getSendPushStatData(context, hash);
 	}
 
-	public static Map<String, Object> getSentTagsData(Context context, String pushVersion)
+	public static Map<String, Object> getSendTagsData(Context context, String pushVersion)
 	{
 		VersionHelper versionHelper = sVersionHelpers.get(pushVersion);
 
-		return versionHelper.getSentTagsData(context);
+		return versionHelper.getSendTagsData(context);
 	}
 
 	public static Map<String, Object> getNearestZoneData(Context context, Location location, String pushVersion)

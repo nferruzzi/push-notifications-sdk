@@ -45,26 +45,26 @@ public class Version__1_2 implements VersionHelper
 	}
 
 	@Override
-	public Map<String, Object> getSentPushStatData(Context context, String hash)
+	public Map<String, Object> getSendPushStatData(Context context, String hash)
 	{
-		throw new UnsupportedOperationException("This feature wasn't introduce in 1.1 api");
+		throw new UnsupportedOperationException("This feature requires 1.3 api");
 	}
 
 	@Override
-	public Map<String, Object> getSentTagsData(Context context)
+	public Map<String, Object> getSendTagsData(Context context)
 	{
-		throw new UnsupportedOperationException("This feature wasn't introduce in 1.1 api");
+		throw new UnsupportedOperationException("This feature requires 1.3 api");
 	}
 
 	@Override
 	public Map<String, Object> getNearestZoneData(Context context, Location location)
 	{
-		throw new UnsupportedOperationException("This feature wasn't introduce in 1.1 api");
+		throw new UnsupportedOperationException("This feature requires 1.3 api");
 	}
 
 	@Override
 	public PushZoneLocation getPushZoneLocationFromData(JSONObject resultData)
 	{
-		throw new UnsupportedOperationException("This feature wasn't introduce in 1.1 api");
+		throw new UnsupportedOperationException("This feature requires 1.3 api");
 	}
 }

@@ -26,6 +26,7 @@
 
 - (void)registerDevice:(NSMutableArray *)arguments withDict:(NSMutableDictionary*)options;
 - (void)setTags:(NSMutableArray *)arguments withDict:(NSMutableDictionary*)options;
+- (void)sendLocation:(NSMutableArray *)arguments withDict:(NSMutableDictionary*)options;
 
 - (void)onDeviceReady:(NSMutableArray *)arguments withDict:(NSMutableDictionary*)options;
 - (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSString*)deviceToken;

@@ -33,11 +33,11 @@ public class DeviceFeature2_5
 	private static final String TAGS_PATH = "setTags";
 	private static final String NEAREST_ZONE = "getNearestZone";
 
-	static void sentPushStat(Context context, String hash)
+	static void sendPushStat(Context context, String hash)
 	{
 		final Map<String, Object> data = new HashMap<String, Object>();
 
-		data.putAll(RequestHelper.getSentPushStatData(context, hash, NetworkUtils.PUSH_VERSION));
+		data.putAll(RequestHelper.getSendPushStatData(context, hash, NetworkUtils.PUSH_VERSION));
 
 		Log.w(TAG, "Try To sent PushStat");
 
@@ -64,11 +64,11 @@ public class DeviceFeature2_5
 				exception);
 	}
 
-	static JSONArray sentTags(Context context, Map<String, Object> tags) throws Exception
+	static JSONArray sendTags(Context context, Map<String, Object> tags) throws Exception
 	{
 		final Map<String, Object> data = new HashMap<String, Object>();
 
-		data.putAll(RequestHelper.getSentTagsData(context, NetworkUtils.PUSH_VERSION));
+		data.putAll(RequestHelper.getSendTagsData(context, NetworkUtils.PUSH_VERSION));
 
 		JSONObject tagsObject = new JSONObject();
 		for (String key : tags.keySet())

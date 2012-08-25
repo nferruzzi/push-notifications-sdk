@@ -30,7 +30,7 @@ public class NetworkUtils
 
 	public static final int MAX_TRIES = 5;
 
-	public static final String PUSH_VERSION = "1.2";
+	public static final String PUSH_VERSION = "1.3";
 	public static final String BASE_URL = "https://cp.pushwoosh.com/json/" + PUSH_VERSION + "/";
 
 

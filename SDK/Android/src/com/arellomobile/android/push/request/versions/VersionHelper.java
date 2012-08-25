@@ -25,9 +25,9 @@ public interface VersionHelper
 {
 	Map<String, Object> getRegistrationUnregistrationData(Context context, String deviceRegistrationID);
 
-	Map<String, Object> getSentPushStatData(Context context, String hash);
+	Map<String, Object> getSendPushStatData(Context context, String hash);
 
-	Map<String,Object> getSentTagsData(Context context);
+	Map<String,Object> getSendTagsData(Context context);
 
 	Map<String,Object> getNearestZoneData(Context context, Location location);
 

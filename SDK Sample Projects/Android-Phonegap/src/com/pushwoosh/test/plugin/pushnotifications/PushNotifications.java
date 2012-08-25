@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 import com.arellomobile.android.push.PushManager;
+import com.arellomobile.android.push.exception.PushWooshException;
 import com.google.android.gcm.GCMRegistrar;
 import org.apache.cordova.api.CordovaInterface;
 import org.apache.cordova.api.Plugin;
@@ -24,13 +25,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class PushNotifications extends Plugin
 {
     public static final String REGISTER = "registerDevice";
     public static final String UNREGISTER = "unregisterDevice";
+    public static final String SET_TAGS = "setTags";
+    public static final String START_GEO_PUSHES = "startGeoPushes";
+    public static final String STOP_GEO_PUSHES = "stopGeoPushes";
 
     HashMap<String, String> callbackIds = new HashMap<String, String>();
+    PushManager mPushManager = null;
 
     /**
      * Called when the activity receives a new intent.
@@ -49,69 +56,138 @@ public class PushNotifications extends Plugin
     {
         super.onDestroy();
     }
+    
+    private PluginResult internalRegister(JSONArray data, String callbackId)
+    {
+        callbackIds.put("registerDevice", callbackId);
+
+        JSONObject params = null;
+        try
+        {
+            params = data.getJSONObject(0);
+        } catch (JSONException e)
+        {
+        	e.printStackTrace();
+            return new PluginResult(Status.ERROR);
+        }
+
+        try
+        {
+            mPushManager = new PushManager(cordova.getActivity(), params.getString("appid"),
+                                           params.getString("projectid"));
+        } catch (JSONException e)
+        {
+        	e.printStackTrace();
+            return new PluginResult(Status.ERROR);
+        }
+
+        try
+        {
+            mPushManager.onStartup(cordova.getActivity());
+        } catch (java.lang.RuntimeException e)
+        {
+        	e.printStackTrace();
+            return new PluginResult(Status.ERROR);
+        }
+
+        checkMessage(cordova.getActivity().getIntent());
+
+        PluginResult result = new PluginResult(Status.NO_RESULT);
+        result.setKeepCallback(true);
+        return result;
+    }
+
+    private PluginResult internalUnregister(JSONArray data, String callbackId)
+    {
+        callbackIds.put("unregisterDevice", callbackId);
+        PluginResult result = new PluginResult(Status.NO_RESULT);
+        result.setKeepCallback(true);
+
+        try
+        {
+            GCMRegistrar.unregister(cordova.getActivity());
+        } catch (Exception e)
+        {
+            return new PluginResult(Status.ERROR);
+        }
+
+        return result;	
+    }
+    
+    private PluginResult internalSendTags(JSONArray data, String callbackId)
+    {
+    	if(mPushManager == null)
+    		return new PluginResult(Status.ERROR);
+    	
+        JSONObject params = null;
+        try
+        {
+            params = data.getJSONObject(0);
+        } catch (JSONException e)
+        {
+        	e.printStackTrace();
+            return new PluginResult(Status.ERROR);
+        }
+
+        @SuppressWarnings("unchecked")
+		Iterator<String> nameItr = params.keys();
+        Map<String, Object> paramsMap = new HashMap<String, Object>();
+        while(nameItr.hasNext()) {
+        	try {
+        		String name = nameItr.next();
+				paramsMap.put(name, params.get(name));
+			} catch (JSONException e) {
+				e.printStackTrace();
+                return new PluginResult(Status.ERROR);
+			}
+        }
+        
+    	try {
+			mPushManager.sendTags(cordova.getActivity(), paramsMap);
+		} catch (PushWooshException e) {
+			e.printStackTrace();
+            return new PluginResult(Status.ERROR);
+		}
+    	
+        return new PluginResult(Status.OK);
+    }
 
     @Override
     public PluginResult execute(String action, JSONArray data, String callbackId)
     {
         Log.d("PushNotifications", "Plugin Called");
 
-        PluginResult result = null;
         if (REGISTER.equals(action))
         {
-            callbackIds.put("registerDevice", callbackId);
-
-            JSONObject params = null;
-            try
-            {
-                params = data.getJSONObject(0);
-            } catch (JSONException e)
-            {
-            	e.printStackTrace();
-                return new PluginResult(Status.ERROR);
-            }
-            PushManager mPushManager = null;
-            try
-            {
-                mPushManager = new PushManager(cordova.getActivity(), params.getString("appid"),
-                                               params.getString("projectid"));
-            } catch (JSONException e)
-            {
-            	e.printStackTrace();
-                return new PluginResult(Status.ERROR);
-            }
-
-            try
-            {
-                mPushManager.onStartup(cordova.getActivity());
-            } catch (java.lang.RuntimeException e)
-            {
-            	e.printStackTrace();
-                return new PluginResult(Status.ERROR);
-            }
-
-            checkMessage(cordova.getActivity().getIntent());
-
-            result = new PluginResult(Status.NO_RESULT);
-            result.setKeepCallback(true);
-
-            return result;
+            return internalRegister(data, callbackId);
         }
 
         if (UNREGISTER.equals(action))
         {
-            callbackIds.put("unregisterDevice", callbackId);
-            result = new PluginResult(Status.NO_RESULT);
-            result.setKeepCallback(true);
+            return internalUnregister(data, callbackId);
+        }
 
-            try
-            {
-                GCMRegistrar.unregister(cordova.getActivity());
-            } catch (Exception e)
-            {
-                return new PluginResult(Status.ERROR);
-            }
+        if (SET_TAGS.equals(action))
+        {
+        	return internalSendTags(data, callbackId);
+        }
 
-            return result;
+        if (START_GEO_PUSHES.equals(action))
+        {
+        	if(mPushManager == null)
+        		return new PluginResult(Status.ERROR);
+        	
+        	mPushManager.startTrackingGeoPushes();
+            return new PluginResult(Status.OK);
+        }
+
+        if (STOP_GEO_PUSHES.equals(action))
+        {
+        	if(mPushManager == null)
+        		return new PluginResult(Status.ERROR);
+        	
+        	mPushManager.stopTrackingGeoPushes();
+            return new PluginResult(Status.OK);
         }
 
         Log.d("DirectoryListPlugin", "Invalid action : " + action + " passed");
