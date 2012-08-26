@@ -28,11 +28,11 @@
 		cordova.exec(success, fail, "PushNotification", "unregisterDevice", []);
 	};
 	
-	PushNotification.prototype.sendLocation = function(success, fail) {
+	PushNotification.prototype.startGeoPushes = function(success, fail) {
 		cordova.exec(success, fail, "PushNotification", "startGeoPushes", []);
 	};
 
-	PushNotification.prototype.sendLocation = function(success, fail) {
+	PushNotification.prototype.stopGeoPushes = function(success, fail) {
 		cordova.exec(success, fail, "PushNotification", "stopGeoPushes", []);
 	};
 

@@ -23,18 +23,27 @@
 		cordova.exec(success, fail, "PushNotification", "setTags", config ? [config] : []);
 	};
 
+	//Android Only----
+	PushNotification.prototype.unregisterDevice = function(success, fail) {
+		cordova.exec(success, fail, "PushNotification", "unregisterDevice", []);
+	};
+	
+	PushNotification.prototype.startGeoPushes = function(success, fail) {
+		cordova.exec(success, fail, "PushNotification", "startGeoPushes", []);
+	};
+
+	PushNotification.prototype.stopGeoPushes = function(success, fail) {
+		cordova.exec(success, fail, "PushNotification", "stopGeoPushes", []);
+	};
+
+	//Android End----
+	
+	//iOS only----
 	// Call this to send geo location for the device
 	PushNotification.prototype.sendLocation = function(config, success, fail) {
 		cordova.exec(success, fail, "PushNotification", "sendLocation", config ? [config] : []);
 	};
 
-	//Android Only----
-	PushNotification.prototype.unregisterDevice = function(success, fail) {
-		cordova.exec(success, fail, "PushNotification", "unregisterDevice", []);
-	};
-	//Android End----
-	
-	//iOS only----
 	PushNotification.prototype.onDeviceReady = function() {
 		cordova.exec(null, null, "PushNotification", "onDeviceReady", []);
 	};
