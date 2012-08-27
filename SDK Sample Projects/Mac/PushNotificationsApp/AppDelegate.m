@@ -5,15 +5,11 @@
 
 #import "AppDelegate.h"
 
-#define kPushWooshAppKey @"PUSHWOOSH_APP_ID"
-#define kApplicationName @"APP_NAME"
-
 @implementation AppDelegate
 
 @synthesize window = _window;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	[PushNotificationManager initializeAppCode:kPushWooshAppKey appName:kApplicationName];
 }
 
 #pragma mark -

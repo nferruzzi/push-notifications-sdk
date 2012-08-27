@@ -15,10 +15,6 @@
 @synthesize viewController = _viewController;
 @synthesize pushManager, navController;
 
-//Enter your app code here
-#define kPushWooshAppKey @"4F0C807E51EC77.93591449"
-#define kApplicationName @"Pushwoosh"
-
 #pragma mark -
 #pragma mark Application lifecycle
 
@@ -33,9 +29,6 @@
 	self.window.rootViewController = navController;
     [self.window makeKeyAndVisible];
 
-	//initialize Pushwoosh
-	[PushNotificationManager initializeWithAppCode:kPushWooshAppKey appName:kApplicationName];
-	
 	//You can set custom delegate or custom orientations for Rich Pushes
 //	PushNotificationManager * pushManager = [PushNotificationManager pushManager];
 //	pushManager.delegate = self;

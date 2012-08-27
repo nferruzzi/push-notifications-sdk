@@ -114,12 +114,22 @@ static NSString * GetMACAddressDisplayString()
 	if(instance == nil) {
 		NSString * appid = [[NSUserDefaults standardUserDefaults] objectForKey:@"Pushwoosh_APPID"];
 		
-		if(!appid)
-			return nil;
+		if(!appid) {
+			appid = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"Pushwoosh_APPID"];
+
+			if(!appid) {
+				return nil;
+			}
+		}
 		
-		NSString * appname = [[NSUserDefaults standardUserDefaults] objectForKey:@"Pushwoosh_APPNAME"];
-		if(!appname)
-			appname = @"";
+		NSString * appname = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+		if(!appname) {
+			appname = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+			
+			if(!appname) {
+				appname = @"";
+			}
+		}
 		
 		instance = [[PushNotificationManager alloc] initWithApplicationCode:appid appName:appname ];
 	}
