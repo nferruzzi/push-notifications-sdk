@@ -1,47 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
+using PushSDK.Classes;
 
-namespace PushSDK
+namespace PushSDK.Controls
 {
-    public partial class PushPage : PhoneApplicationPage
+    public partial class PushPage
     {
-        public PushPage()
-        {
-            //InitializeComponent();
-        }
-
-        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            service = (Application.Current as IPushWooshApp).NotificationService;
-            if (NavigationContext.QueryString.ContainsKey("content"))
-            {
-                service.LastPushContent = NavigationContext.QueryString["content"];
-            }
-            else
-            {
-                service.LastPushContent = null;
-            }
-            NavigationService.Navigate(service.FirstPage);
+
+            var applicationService = ((PhonePushApplicationService) PhoneApplicationService.Current);
+
+            applicationService.NotificationService.LastPush = SDKHelpers.ParsePushData(e.Uri.ToString());
+
+            applicationService.NotificationService.FireAcceptedPush();
         }
 
-        PWNotificationService service;
-
-        protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            base.OnNavigatedFrom(e);
-            service.RaisePushEvent();
             NavigationService.RemoveBackEntry();
+            
+            base.OnNavigatedFrom(e);
         }
     }
 }

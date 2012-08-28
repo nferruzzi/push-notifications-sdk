@@ -1,47 +1,95 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
+using PushSDK;
 
 namespace PushWooshWP7Sample
 {
-    public partial class MainPage : PhoneApplicationPage
+    public partial class MainPage 
     {
-        // Constructor
+        private readonly NotificationService _service = ((PhonePushApplicationService)PhoneApplicationService.Current).NotificationService;
+
         public MainPage()
         {
             InitializeComponent();
 
-            this.Loaded += new RoutedEventHandler(MainPage_Loaded);
-            ((App)Application.Current).NotificationService.PushAccepted += new EventHandler<PushSDK.PWNotificationEventArgs>(NotificationService_PushAccepted);
+            _service.Tags.OnError += (sender, args) => MessageBox.Show("Error while sending the tags: \n" + args.Result);
+            _service.Tags.OnSendingComplete += (sender, args) =>
+                                                                      {
+                                                                          MessageBox.Show("Tag has been sent!");
+
+                                                                          DisplaySkippedTags(args.Result);
+                                    
+                                                                      };
+            ResetMyMainTile();
         }
 
-        void NotificationService_PushAccepted(object sender, PushSDK.PWNotificationEventArgs e)
+        private void ButtonClick(object sender, RoutedEventArgs e)
         {
-            PushContent.Text = e.NotificationContent??"*no content*";
+            _service.UnsubscribeFromPushes();
         }
 
-        // Load data for the ViewModel Items
-        private void MainPage_Loaded(object sender, RoutedEventArgs e)
+        private void btnSendTag_Click(object sender, RoutedEventArgs e)
         {
+            var tagsList = new List<KeyValuePair<string, object>>();
+
+            object value;
+            int iValue;
+            if (int.TryParse(tbTagValue.Text, out iValue))
+                value = iValue;
+            else if (tbTagValue.Text.IndexOf(',') != -1)
+                value = tbTagValue.Text.Replace(", ", ",").Split(',');
+            else
+                value = tbTagValue.Text;
+
+            tagsList.Add(new KeyValuePair<string, object>(tbTagTitle.Text, value));
+            _service.Tags.SendRequest(tagsList);
+
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void DisplaySkippedTags(IEnumerable<KeyValuePair<string, string>> skippedTags)
         {
-            ((App)Application.Current).NotificationService.UnsubscribeFromPushes();
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine("These tags has been ignored:");
+
+            foreach (var tag in skippedTags)
+            {
+                builder.AppendLine(string.Format("{0} : {1}", tag.Key, tag.Value));
+            }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            ((App)Application.Current).RootFrame.Navigate(new Uri("/Page1.xaml",  UriKind.Relative));
+            _service.GeoZone.Start();
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            _service.GeoZone.Stop();
+        }
+
+        private void ResetMyMainTile()
+        {
+
+            ShellTile tileToFind = ShellTile.ActiveTiles.First();
+            if (tileToFind != null)
+            {
+
+                StandardTileData newTileData = new StandardTileData
+                {
+                    Title = "Push Woosh",
+                    BackgroundImage = new Uri("Background.png", UriKind.RelativeOrAbsolute),
+                    Count = 0,
+                    BackTitle = "",
+                    BackBackgroundImage = new Uri("doesntexist.png", UriKind.RelativeOrAbsolute),
+                    BackContent = ""
+                };
+
+                tileToFind.Update(newTileData);
+            }
         }
     }
 }

@@ -19,4 +19,9 @@ public class PushWooshException extends Exception
 	{
 		super(e);
 	}
+
+	public PushWooshException(String s)
+	{
+		super(s);
+	}
 }

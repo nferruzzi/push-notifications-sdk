@@ -7,13 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PushNotificationManager.h"
 
 @class ViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, PushNotificationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (nonatomic, retain) PushNotificationManager *pushManager;
 @property (strong, nonatomic) UIWindow *window;
 
 @property (nonatomic, retain) UINavigationController *navController;

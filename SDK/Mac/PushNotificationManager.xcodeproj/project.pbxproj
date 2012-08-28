@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		500B661515DD5888002B2233 /* MyAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B661315DD5888002B2233 /* MyAppDelegate.h */; };
-		500B661615DD5888002B2233 /* MyAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B661415DD5888002B2233 /* MyAppDelegate.m */; };
 		500B661A15DD5B53002B2233 /* PWSetTagsRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B661815DD5B53002B2233 /* PWSetTagsRequest.h */; };
 		500B661B15DD5B53002B2233 /* PWSetTagsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B661915DD5B53002B2233 /* PWSetTagsRequest.m */; };
 		500B661E15DD5B9E002B2233 /* PWRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B661C15DD5B9E002B2233 /* PWRequest.h */; };
@@ -24,8 +22,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		500B661315DD5888002B2233 /* MyAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAppDelegate.h; sourceTree = "<group>"; };
-		500B661415DD5888002B2233 /* MyAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAppDelegate.m; sourceTree = "<group>"; };
 		500B661815DD5B53002B2233 /* PWSetTagsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWSetTagsRequest.h; sourceTree = "<group>"; };
 		500B661915DD5B53002B2233 /* PWSetTagsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWSetTagsRequest.m; sourceTree = "<group>"; };
 		500B661C15DD5B9E002B2233 /* PWRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWRequest.h; sourceTree = "<group>"; };
@@ -105,8 +101,6 @@
 				500B661D15DD5B9E002B2233 /* PWRequest.m */,
 				500B661815DD5B53002B2233 /* PWSetTagsRequest.h */,
 				500B661915DD5B53002B2233 /* PWSetTagsRequest.m */,
-				500B661315DD5888002B2233 /* MyAppDelegate.h */,
-				500B661415DD5888002B2233 /* MyAppDelegate.m */,
 				ABB6AF7C14D2AED300D0A064 /* PushNotificationManager.h */,
 				ABB6AF7D14D2AED300D0A064 /* PushNotificationManager.m */,
 				ABB6AF7A14D2AED300D0A064 /* Supporting Files */,
@@ -129,7 +123,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				500B661515DD5888002B2233 /* MyAppDelegate.h in Headers */,
 				500B661A15DD5B53002B2233 /* PWSetTagsRequest.h in Headers */,
 				500B661E15DD5B9E002B2233 /* PWRequest.h in Headers */,
 				500B662215DD5BBA002B2233 /* PWRequestManager.h in Headers */,
@@ -190,7 +183,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABB6AF7E14D2AED300D0A064 /* PushNotificationManager.m in Sources */,
-				500B661615DD5888002B2233 /* MyAppDelegate.m in Sources */,
 				500B661B15DD5B53002B2233 /* PWSetTagsRequest.m in Sources */,
 				500B661F15DD5B9E002B2233 /* PWRequest.m in Sources */,
 				500B662315DD5BBA002B2233 /* PWRequestManager.m in Sources */,

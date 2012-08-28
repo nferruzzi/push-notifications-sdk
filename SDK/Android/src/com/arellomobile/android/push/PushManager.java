@@ -16,6 +16,8 @@ import android.os.Bundle;
 import com.arellomobile.android.push.exception.PushWooshException;
 import com.arellomobile.android.push.preference.SoundType;
 import com.arellomobile.android.push.preference.VibrateType;
+import com.arellomobile.android.push.tags.SendPushTagsAsyncTask;
+import com.arellomobile.android.push.tags.SendPushTagsCallBack;
 import com.arellomobile.android.push.utils.ExecutorHelper;
 import com.arellomobile.android.push.utils.GeneralUtils;
 import com.arellomobile.android.push.utils.PreferenceUtils;
@@ -125,7 +127,7 @@ public class PushManager
 			}
 		}
 	}
-	
+
 	public void startTrackingGeoPushes()
 	{
 		mContext.startService(new Intent(mContext, GeoLocationService.class));
@@ -163,7 +165,8 @@ public class PushManager
 	 * @param tags - tags to sent. Value can be String or Integer only - if not Exception will be thrown
 	 * @return map of wrong tags. key is name of the tag
 	 */
-	public Map<String, String> sendTags(Context context, Map<String, Object> tags) throws PushWooshException
+	public static Map<String, String> sendTagsFromBG(Context context, Map<String, Object> tags)
+			throws PushWooshException
 	{
 		Map<String, String> wrongTags = new HashMap<String, String>();
 
@@ -184,6 +187,11 @@ public class PushManager
 
 
 		return wrongTags;
+	}
+
+	public static void sendTagsFromUI(Context context, Map<String, Object> tags, SendPushTagsCallBack callBack)
+	{
+		new SendPushTagsAsyncTask(context, callBack).execute(tags);
 	}
 
 	//	------------------- 2.5 Features ENDS -------------------

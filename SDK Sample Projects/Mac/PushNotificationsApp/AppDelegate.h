@@ -4,9 +4,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "PushNotificationManager.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, PushNotificationDelegate> {
+@interface AppDelegate : NSObject <NSApplicationDelegate> {
 }
 
 @property (assign) IBOutlet NSWindow *window;

@@ -12,11 +12,9 @@ package com.pushwoosh.test.plugin.pushnotifications;
 
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 import com.arellomobile.android.push.PushManager;
 import com.arellomobile.android.push.exception.PushWooshException;
 import com.google.android.gcm.GCMRegistrar;
-import org.apache.cordova.api.CordovaInterface;
 import org.apache.cordova.api.Plugin;
 import org.apache.cordova.api.PluginResult;
 import org.apache.cordova.api.PluginResult.Status;
@@ -30,198 +28,221 @@ import java.util.Map;
 
 public class PushNotifications extends Plugin
 {
-    public static final String REGISTER = "registerDevice";
-    public static final String UNREGISTER = "unregisterDevice";
-    public static final String SET_TAGS = "setTags";
-    public static final String START_GEO_PUSHES = "startGeoPushes";
-    public static final String STOP_GEO_PUSHES = "stopGeoPushes";
+	public static final String REGISTER = "registerDevice";
+	public static final String UNREGISTER = "unregisterDevice";
+	public static final String SET_TAGS = "setTags";
+	public static final String START_GEO_PUSHES = "startGeoPushes";
+	public static final String STOP_GEO_PUSHES = "stopGeoPushes";
 
-    HashMap<String, String> callbackIds = new HashMap<String, String>();
-    PushManager mPushManager = null;
+	HashMap<String, String> callbackIds = new HashMap<String, String>();
+	PushManager mPushManager = null;
 
-    /**
-     * Called when the activity receives a new intent.
-     */
-    public void onNewIntent(Intent intent)
-    {
-        super.onNewIntent(intent);
+	/**
+	 * Called when the activity receives a new intent.
+	 */
+	public void onNewIntent(Intent intent)
+	{
+		super.onNewIntent(intent);
 
-        checkMessage(intent);
-    }
+		checkMessage(intent);
+	}
 
-    /**
-     * The final call you receive before your activity is destroyed.
-     */
-    public void onDestroy()
-    {
-        super.onDestroy();
-    }
-    
-    private PluginResult internalRegister(JSONArray data, String callbackId)
-    {
-        callbackIds.put("registerDevice", callbackId);
+	/**
+	 * The final call you receive before your activity is destroyed.
+	 */
+	public void onDestroy()
+	{
+		super.onDestroy();
+	}
 
-        JSONObject params = null;
-        try
-        {
-            params = data.getJSONObject(0);
-        } catch (JSONException e)
-        {
-        	e.printStackTrace();
-            return new PluginResult(Status.ERROR);
-        }
-
-        try
-        {
-            mPushManager = new PushManager(cordova.getActivity(), params.getString("appid"),
-                                           params.getString("projectid"));
-        } catch (JSONException e)
-        {
-        	e.printStackTrace();
-            return new PluginResult(Status.ERROR);
-        }
-
-        try
-        {
-            mPushManager.onStartup(cordova.getActivity());
-        } catch (java.lang.RuntimeException e)
-        {
-        	e.printStackTrace();
-            return new PluginResult(Status.ERROR);
-        }
-
-        checkMessage(cordova.getActivity().getIntent());
-
-        PluginResult result = new PluginResult(Status.NO_RESULT);
-        result.setKeepCallback(true);
-        return result;
-    }
-
-    private PluginResult internalUnregister(JSONArray data, String callbackId)
-    {
-        callbackIds.put("unregisterDevice", callbackId);
-        PluginResult result = new PluginResult(Status.NO_RESULT);
-        result.setKeepCallback(true);
-
-        try
-        {
-            GCMRegistrar.unregister(cordova.getActivity());
-        } catch (Exception e)
-        {
-            return new PluginResult(Status.ERROR);
-        }
-
-        return result;	
-    }
-    
-    private PluginResult internalSendTags(JSONArray data, String callbackId)
-    {
-    	if(mPushManager == null)
-    		return new PluginResult(Status.ERROR);
-    	
-        JSONObject params = null;
-        try
-        {
-            params = data.getJSONObject(0);
-        } catch (JSONException e)
-        {
-        	e.printStackTrace();
-            return new PluginResult(Status.ERROR);
-        }
-
-        @SuppressWarnings("unchecked")
-		Iterator<String> nameItr = params.keys();
-        Map<String, Object> paramsMap = new HashMap<String, Object>();
-        while(nameItr.hasNext()) {
-        	try {
-        		String name = nameItr.next();
-				paramsMap.put(name, params.get(name));
-			} catch (JSONException e) {
-				e.printStackTrace();
-                return new PluginResult(Status.ERROR);
-			}
-        }
-        
-    	try {
-			mPushManager.sendTags(cordova.getActivity(), paramsMap);
-		} catch (PushWooshException e) {
-			e.printStackTrace();
-            return new PluginResult(Status.ERROR);
+	private PluginResult internalRegister(JSONArray data, String callbackId)
+	{
+		JSONObject params = null;
+		try
+		{
+			params = data.getJSONObject(0);
 		}
-    	
-        return new PluginResult(Status.OK);
-    }
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+			return new PluginResult(Status.ERROR);
+		}
 
-    @Override
-    public PluginResult execute(String action, JSONArray data, String callbackId)
-    {
-        Log.d("PushNotifications", "Plugin Called");
+		try
+		{
+			mPushManager =
+					new PushManager(cordova.getActivity(), params.getString("appid"), params.getString("projectid"));
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+			return new PluginResult(Status.ERROR);
+		}
 
-        if (REGISTER.equals(action))
-        {
-            return internalRegister(data, callbackId);
-        }
+		try
+		{
+			mPushManager.onStartup(cordova.getActivity());
+		}
+		catch (java.lang.RuntimeException e)
+		{
+			e.printStackTrace();
+			return new PluginResult(Status.ERROR);
+		}
 
-        if (UNREGISTER.equals(action))
-        {
-            return internalUnregister(data, callbackId);
-        }
+		checkMessage(cordova.getActivity().getIntent());
 
-        if (SET_TAGS.equals(action))
-        {
-        	return internalSendTags(data, callbackId);
-        }
+		callbackIds.put("registerDevice", callbackId);
 
-        if (START_GEO_PUSHES.equals(action))
-        {
-        	if(mPushManager == null)
-        		return new PluginResult(Status.ERROR);
-        	
-        	mPushManager.startTrackingGeoPushes();
-            return new PluginResult(Status.OK);
-        }
+		PluginResult result = new PluginResult(Status.NO_RESULT);
+		result.setKeepCallback(true);
+		return result;
+	}
 
-        if (STOP_GEO_PUSHES.equals(action))
-        {
-        	if(mPushManager == null)
-        		return new PluginResult(Status.ERROR);
-        	
-        	mPushManager.stopTrackingGeoPushes();
-            return new PluginResult(Status.OK);
-        }
+	private void checkMessage(Intent intent)
+	{
+		if (null != intent)
+		{
+			if (intent.hasExtra(PushManager.PUSH_RECEIVE_EVENT))
+			{
+				doOnMessageReceive(intent.getExtras().getString(PushManager.PUSH_RECEIVE_EVENT));
+			}
+			else if (intent.hasExtra(PushManager.REGISTER_EVENT))
+			{
+				doOnRegistered(intent.getExtras().getString(PushManager.REGISTER_EVENT));
+			}
+			else if (intent.hasExtra(PushManager.UNREGISTER_EVENT))
+			{
+				doOnUnregisteredError(intent.getExtras().getString(PushManager.UNREGISTER_EVENT));
+			}
+			else if (intent.hasExtra(PushManager.REGISTER_ERROR_EVENT))
+			{
+				doOnRegisteredError(intent.getExtras().getString(PushManager.REGISTER_ERROR_EVENT));
+			}
+			else if (intent.hasExtra(PushManager.UNREGISTER_ERROR_EVENT))
+			{
+				doOnUnregistered(intent.getExtras().getString(PushManager.UNREGISTER_ERROR_EVENT));
+			}
+		}
+	}
 
-        Log.d("DirectoryListPlugin", "Invalid action : " + action + " passed");
-        return new PluginResult(Status.INVALID_ACTION);
-    }
+	private PluginResult internalUnregister(JSONArray data, String callbackId)
+	{
+		callbackIds.put("unregisterDevice", callbackId);
+		PluginResult result = new PluginResult(Status.NO_RESULT);
+		result.setKeepCallback(true);
 
-    private void checkMessage(Intent intent)
-    {
-        if (null != intent)
-        {
-            if (intent.hasExtra(PushManager.PUSH_RECEIVE_EVENT))
-            {
-                doOnMessageReceive(intent.getExtras().getString(PushManager.PUSH_RECEIVE_EVENT));
-            }
-            else if (intent.hasExtra(PushManager.REGISTER_EVENT))
-            {
-                doOnRegistered(intent.getExtras().getString(PushManager.REGISTER_EVENT));
-            }
-            else if (intent.hasExtra(PushManager.UNREGISTER_EVENT))
-            {
-                doOnUnregisteredError(intent.getExtras().getString(PushManager.UNREGISTER_EVENT));
-            }
-            else if (intent.hasExtra(PushManager.REGISTER_ERROR_EVENT))
-            {
-                doOnRegisteredError(intent.getExtras().getString(PushManager.REGISTER_ERROR_EVENT));
-            }
-            else if (intent.hasExtra(PushManager.UNREGISTER_ERROR_EVENT))
-            {
-                doOnUnregistered(intent.getExtras().getString(PushManager.UNREGISTER_ERROR_EVENT));
-            }
-        }
-    }
+		try
+		{
+			GCMRegistrar.unregister(cordova.getActivity());
+		}
+		catch (Exception e)
+		{
+			return new PluginResult(Status.ERROR);
+		}
 
-	public void doOnRegistered(String registrationId)
+		return result;
+	}
+
+	private PluginResult internalSendTags(JSONArray data, String callbackId)
+	{
+		if (mPushManager == null)
+		{
+			return new PluginResult(Status.ERROR);
+		}
+
+		JSONObject params;
+		try
+		{
+			params = data.getJSONObject(0);
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+			return new PluginResult(Status.ERROR);
+		}
+
+		@SuppressWarnings("unchecked") Iterator<String> nameItr = params.keys();
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		while (nameItr.hasNext())
+		{
+			try
+			{
+				String name = nameItr.next();
+				paramsMap.put(name, params.get(name));
+			}
+			catch (JSONException e)
+			{
+				e.printStackTrace();
+				return new PluginResult(Status.ERROR);
+			}
+		}
+
+		try
+		{
+			Map<String, String> skippedTags = PushManager.sendTagsFromBG(cordova.getActivity(), paramsMap);
+
+			JSONObject skippedTagsObj = new JSONObject();
+			for (String tagName : skippedTags.keySet())
+			{
+				skippedTags.put(tagName, skippedTags.get(tagName));
+			}
+
+			return new PluginResult(Status.OK, skippedTagsObj);
+		}
+		catch (PushWooshException e)
+		{
+			e.printStackTrace();
+			return new PluginResult(Status.ERROR);
+		}
+	}
+
+	@Override
+	public PluginResult execute(String action, JSONArray data, String callbackId)
+	{
+		Log.d("PushNotifications", "Plugin Called");
+
+		if (REGISTER.equals(action))
+		{
+			return internalRegister(data, callbackId);
+		}
+
+		if (UNREGISTER.equals(action))
+		{
+			return internalUnregister(data, callbackId);
+		}
+
+		if (SET_TAGS.equals(action))
+		{
+			return internalSendTags(data, callbackId);
+		}
+
+		if (START_GEO_PUSHES.equals(action))
+		{
+			if (mPushManager == null)
+			{
+				return new PluginResult(Status.ERROR);
+			}
+
+			mPushManager.startTrackingGeoPushes();
+			return new PluginResult(Status.OK);
+		}
+
+		if (STOP_GEO_PUSHES.equals(action))
+		{
+			if (mPushManager == null)
+			{
+				return new PluginResult(Status.ERROR);
+			}
+
+			mPushManager.stopTrackingGeoPushes();
+			return new PluginResult(Status.OK);
+		}
+
+		Log.d("DirectoryListPlugin", "Invalid action : " + action + " passed");
+		return new PluginResult(Status.INVALID_ACTION);
+	}
+
+	private void doOnRegistered(String registrationId)
 	{
 		String callbackId = callbackIds.get("registerDevice");
 		PluginResult result = new PluginResult(Status.OK, registrationId);
@@ -229,7 +250,7 @@ public class PushNotifications extends Plugin
 		callbackIds.remove(callbackId);
 	}
 
-	public void doOnRegisteredError(String errorId)
+	private void doOnRegisteredError(String errorId)
 	{
 		String callbackId = callbackIds.get("registerDevice");
 		PluginResult result = new PluginResult(Status.ERROR, errorId);
@@ -237,7 +258,7 @@ public class PushNotifications extends Plugin
 		callbackIds.remove(callbackId);
 	}
 
-	public void doOnUnregistered(String registrationId)
+	private void doOnUnregistered(String registrationId)
 	{
 		String callbackId = callbackIds.get("unregisterDevice");
 		PluginResult result = new PluginResult(Status.OK, registrationId);
@@ -245,7 +266,7 @@ public class PushNotifications extends Plugin
 		callbackIds.remove(callbackId);
 	}
 
-	public void doOnUnregisteredError(String errorId)
+	private void doOnUnregisteredError(String errorId)
 	{
 		String callbackId = callbackIds.get("unregisterDevice");
 		PluginResult result = new PluginResult(Status.ERROR, errorId);
@@ -253,9 +274,9 @@ public class PushNotifications extends Plugin
 		callbackIds.remove(callbackId);
 	}
 
-	public void doOnMessageReceive(String message)
-    {
-        String jsStatement = String.format("window.plugins.pushNotification.notificationCallback(%s);", message);
-        sendJavascript(jsStatement);
-    }
+	private void doOnMessageReceive(String message)
+	{
+		String jsStatement = String.format("window.plugins.pushNotification.notificationCallback(%s);", message);
+		sendJavascript(jsStatement);
+	}
 }

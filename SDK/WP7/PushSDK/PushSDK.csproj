@@ -18,6 +18,8 @@
     <SilverlightApplication>false</SilverlightApplication>
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <Utf8Output>true</Utf8Output>
+    <ExpressionBlendVersion>4.0.30816.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,43 +43,47 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Coding4Fun.Phone.Controls">
-      <HintPath>..\3dparty\Coding4Fun.Phone.Controls.dll</HintPath>
-    </Reference>
-    <Reference Include="Coding4Fun.Phone.Controls.Toolkit">
-      <HintPath>..\3dparty\Coding4Fun.Phone.Controls.Toolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="Coding4Fun.Phone.Site.Controls">
-      <HintPath>..\3dparty\Coding4Fun.Phone.Site.Controls.dll</HintPath>
+    <Reference Include="Coding4Fun.Phone.Controls, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Coding4Fun.Phone.Controls.1.6.1\lib\sl4-windowsphone71\Coding4Fun.Phone.Controls.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Interop" />
-    <Reference Include="Newtonsoft.Json.WindowsPhone">
-      <HintPath>..\3dparty\Newtonsoft.Json.WindowsPhone.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.8\lib\sl4-windowsphone71\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.Device" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\CustomEventArgs.cs" />
+    <Compile Include="Classes\GeozoneRequest.cs" />
+    <Compile Include="Classes\JsonHelpers.cs" />
+    <Compile Include="Classes\StatisticRequest.cs" />
+    <Compile Include="Classes\SDKHelpers.cs" />
+    <Compile Include="Classes\ToastPush.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="controls\PushPage.xaml.cs">
+    <Compile Include="Controls\PushNotificationMessage.cs" />
+    <Compile Include="Classes\RegistrationRequest.cs" />
+    <Compile Include="Controls\PushPage.xaml.cs">
       <DependentUpon>PushPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DeviceRegistrationRequestData.cs" />
-    <Compile Include="DeviceRegistrationResponseData.cs" />
-    <Compile Include="IPushWooshApp.cs" />
-    <Compile Include="PWNotificationEventArgs.cs" />
-    <Compile Include="PWNotificationService.cs" />
+    <Compile Include="GeozoneService.cs" />
+    <Compile Include="NotificationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DeviceRegistrationRequest.cs" />
-    <Compile Include="RequestErrorEventArgs.cs" />
-    <Compile Include="WebRequestExceptionEvenArgs.cs" />
+    <Compile Include="PhonePushApplicationService.cs" />
+    <Compile Include="RegistrationService.cs" />
+    <Compile Include="StatisticService.cs" />
+    <Compile Include="TagsService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="controls\PushPage.xaml">
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Controls\PushPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

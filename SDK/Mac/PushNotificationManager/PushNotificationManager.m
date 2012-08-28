@@ -320,38 +320,21 @@ static NSString * GetMACAddressDisplayString()
 @end
 
 #import <objc/runtime.h>
-#import "MyAppDelegate.h"
 
-@interface MyAppDelegate (Pushwoosh)
-- (void)application:(NSApplication *)application newDidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken;
-- (void)application:(NSApplication *)application newDidFailToRegisterForRemoteNotificationsWithError:(NSError *)err;
-- (void)application:(NSApplication *)application newDidReceiveRemoteNotification:(NSDictionary *)userInfo;
+@interface NSApplication(SupressWarnings)
+- (void)application:(NSApplication *)application pw_didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken;
+- (void)application:(NSApplication *)application pw_didFailToRegisterForRemoteNotificationsWithError:(NSError *)err;
+- (void)application:(NSApplication *)application pw_didReceiveRemoteNotification:(NSDictionary *)userInfo;
 
-- (void)newApplicationDidFinishLaunching:(NSNotification *)aNotification;
+- (void)pw_applicationDidFinishLaunching:(NSNotification *)aNotification;
 @end
 
-@implementation MyAppDelegate(Pushwoosh)
+@implementation NSApplication(Pushwoosh)
 
-- (void)application:(NSApplication *)application newDidRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
-	[self application:application newDidRegisterForRemoteNotificationsWithDeviceToken:devToken];
-	
-	[[PushNotificationManager pushManager] handlePushRegistration:devToken];
-}
-
-- (void)application:(NSApplication *)application newDidFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
-	[self application:application newDidFailToRegisterForRemoteNotificationsWithError:err];
-	
-	NSLog(@"Error registering for push notifications. Error: %@", err);
-}
-
-- (void)application:(NSApplication *)application newDidReceiveRemoteNotification:(NSDictionary *)userInfo {
-	[self application:application newDidReceiveRemoteNotification:userInfo];
-	
-	[[PushNotificationManager pushManager] handlePushReceived:userInfo];
-}
-
-- (void)newApplicationDidFinishLaunching:(NSNotification *)aNotification {
-	[self newApplicationDidFinishLaunching:aNotification];
+BOOL dynamicDidFinishLaunching(id self, SEL _cmd, id aNotification) {
+	if ([self respondsToSelector:@selector(pw_applicationDidFinishLaunching:)]) {
+		[self pw_applicationDidFinishLaunching:aNotification];
+	}
 	
 	[[NSApplication sharedApplication] registerForRemoteNotificationTypes:(NSRemoteNotificationTypeBadge | NSRemoteNotificationTypeSound | NSRemoteNotificationTypeAlert)];
 	
@@ -362,52 +345,73 @@ static NSString * GetMACAddressDisplayString()
 	[[PushNotificationManager pushManager] handlePushReceived:[aNotification userInfo]];
 }
 
-void dynamicMethodIMP(id self, SEL _cmd, id application, id param) {
-	if (_cmd == @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:)) {
-		[[PushNotificationManager pushManager] handlePushRegistration:param];
-		return;
-    }
+void dynamicDidRegisterForRemoteNotificationsWithDeviceToken(id self, SEL _cmd, id application, id devToken) {
+	if ([self respondsToSelector:@selector(application:pw_didRegisterForRemoteNotificationsWithDeviceToken:)]) {
+		[self application:application pw_didRegisterForRemoteNotificationsWithDeviceToken:devToken];
+	}
 	
-	if (_cmd == @selector(application:didFailToRegisterForRemoteNotificationsWithError:)) {
-		NSLog(@"Error registering for push notifications. Error: %@", param);
-		return;
-    }
-	
-	if (_cmd == @selector(application:didReceiveRemoteNotification:)) {
-		[[PushNotificationManager pushManager] handlePushReceived:param];
-		return;
-    }
+	[[PushNotificationManager pushManager] handlePushRegistration:devToken];
 }
 
-+ (void)load {
-	method_exchangeImplementations(class_getInstanceMethod(self, @selector(applicationDidFinishLaunching:)), class_getInstanceMethod(self, @selector(newApplicationDidFinishLaunching:)));
-	
-	//if methods does not exist - provide default implementation, otherwise swap the implementation
+void dynamicDidFailToRegisterForRemoteNotificationsWithError(id self, SEL _cmd, id application, id error) {
+	if ([self respondsToSelector:@selector(application:pw_didFailToRegisterForRemoteNotificationsWithError:)]) {
+		[self application:application pw_didFailToRegisterForRemoteNotificationsWithError:error];
+	}
+
+	NSLog(@"Error registering for push notifications. Error: %@", error);
+}
+
+void dynamicDidReceiveRemoteNotification(id self, SEL _cmd, id application, id userInfo) {
+	if ([self respondsToSelector:@selector(application:pw_didReceiveRemoteNotification:)]) {
+		[self application:application pw_didReceiveRemoteNotification:userInfo];
+	}
+
+	[[PushNotificationManager pushManager] handlePushReceived:userInfo];
+}
+
+- (void) pw_setDelegate:(id<NSApplicationDelegate>)delegate {
 	Method method = nil;
-	method = class_getInstanceMethod(self, @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:));
-	if(method) {
-		method_exchangeImplementations(method, class_getInstanceMethod(self, @selector(application:newDidRegisterForRemoteNotificationsWithDeviceToken:)));
-	}
-	else {
-		class_addMethod(self, @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:), (IMP)dynamicMethodIMP, "v@:::");
+	method = class_getInstanceMethod([delegate class], @selector(applicationDidFinishLaunching:));
+	
+	if (method) {
+		class_addMethod([delegate class], @selector(pw_applicationDidFinishLaunching:), (IMP)dynamicDidFinishLaunching, "v@::");
+		method_exchangeImplementations(class_getInstanceMethod([delegate class], @selector(applicationDidFinishLaunching:)), class_getInstanceMethod([delegate class], @selector(pw_applicationDidFinishLaunching:)));
+	} else {
+		class_addMethod([delegate class], @selector(applicationDidFinishLaunching:), (IMP)dynamicDidFinishLaunching, "v@::");
 	}
 	
-	method = class_getInstanceMethod(self, @selector(application:didFailToRegisterForRemoteNotificationsWithError:));
+	method = class_getInstanceMethod([delegate class], @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:));
 	if(method) {
-		method_exchangeImplementations(class_getInstanceMethod(self, @selector(application:didFailToRegisterForRemoteNotificationsWithError:)), class_getInstanceMethod(self, @selector(application:newDidFailToRegisterForRemoteNotificationsWithError:)));
+		class_addMethod([delegate class], @selector(application:pw_didRegisterForRemoteNotificationsWithDeviceToken:), (IMP)dynamicDidRegisterForRemoteNotificationsWithDeviceToken, "v@:::");
+		method_exchangeImplementations(class_getInstanceMethod([delegate class], @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:)), class_getInstanceMethod([delegate class], @selector(application:pw_didRegisterForRemoteNotificationsWithDeviceToken:)));
 	}
 	else {
-		class_addMethod(self, @selector(application:didFailToRegisterForRemoteNotificationsWithError:), (IMP)dynamicMethodIMP, "v@:::");
+		class_addMethod([delegate class], @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:), (IMP)dynamicDidRegisterForRemoteNotificationsWithDeviceToken, "v@:::");
 	}
 	
-	method = class_getInstanceMethod(self, @selector(application:didReceiveRemoteNotification:));
+	method = class_getInstanceMethod([delegate class], @selector(application:didFailToRegisterForRemoteNotificationsWithError:));
 	if(method) {
-		method_exchangeImplementations(class_getInstanceMethod(self, @selector(application:didReceiveRemoteNotification:)), class_getInstanceMethod(self, @selector(application:newDidReceiveRemoteNotification:)));
+		class_addMethod([delegate class], @selector(application:pw_didFailToRegisterForRemoteNotificationsWithError:), (IMP)dynamicDidRegisterForRemoteNotificationsWithDeviceToken, "v@:::");
+		method_exchangeImplementations(class_getInstanceMethod([delegate class], @selector(application:didFailToRegisterForRemoteNotificationsWithError:)), class_getInstanceMethod([delegate class], @selector(application:pw_didFailToRegisterForRemoteNotificationsWithError:)));
 	}
 	else {
-		class_addMethod(self, @selector(application:didReceiveRemoteNotification:), (IMP)dynamicMethodIMP, "v@:::");
+		class_addMethod([delegate class], @selector(application:didFailToRegisterForRemoteNotificationsWithError:), (IMP)dynamicDidFailToRegisterForRemoteNotificationsWithError, "v@:::");
 	}
+	
+	method = class_getInstanceMethod([delegate class], @selector(application:didReceiveRemoteNotification:));
+	if(method) {
+		class_addMethod([delegate class], @selector(application:pw_didReceiveRemoteNotification:), (IMP)dynamicDidReceiveRemoteNotification, "v@:::");
+		method_exchangeImplementations(class_getInstanceMethod([delegate class], @selector(application:didReceiveRemoteNotification:)), class_getInstanceMethod([delegate class], @selector(application:pw_didReceiveRemoteNotification:)));
+	}
+	else {
+		class_addMethod([delegate class], @selector(application:didReceiveRemoteNotification:), (IMP)dynamicDidReceiveRemoteNotification, "v@:::");
+	}
+	
+	[self pw_setDelegate:delegate];
+}
+
++ (void) initialize {
+	method_exchangeImplementations(class_getInstanceMethod(self, @selector(setDelegate:)), class_getInstanceMethod(self, @selector(pw_setDelegate:)));
 }
 
 @end
-

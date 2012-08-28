@@ -8,12 +8,13 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import "PushNotificationManager.h"
 
 @implementation AppDelegate
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
-@synthesize pushManager, navController;
+@synthesize navController;
 
 #pragma mark -
 #pragma mark Application lifecycle
@@ -46,6 +47,19 @@
 		[alert release];
 	}
 }
+
+/*
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+	NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken");
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+	NSLog(@"didFailToRegisterForRemoteNotificationsWithError");
+}
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+	NSLog(@"didReceiveRemoteNotification");
+}
+ */
 
 - (void)dealloc
 {
