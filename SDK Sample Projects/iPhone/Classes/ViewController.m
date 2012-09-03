@@ -73,7 +73,8 @@
 	
 	NSDictionary *tags = [NSDictionary dictionaryWithObjectsAndKeys:
 						  [deviceIdField text], @"deviceId", 
-						  [NSNumber numberWithInt:[userIdField.text intValue]], @"testInt", 
+						  [NSNumber numberWithInt:[userIdField.text intValue]], @"testInt",
+//						  [NSArray arrayWithObjects:@"one", @"two", @"three", nil], @"array",
 						  nil];
 	
 	[[PushNotificationManager pushManager] setTags:tags];

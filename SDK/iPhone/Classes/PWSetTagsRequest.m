@@ -18,11 +18,23 @@
 	NSMutableArray *encodedTagsBuilder = [NSMutableArray new];
 	
 	for (NSString *key in [tags allKeys]) {
-		NSString *valueString;
+		NSString *valueString = @"";
 		NSObject *value = [tags objectForKey:key];
 		
 		if ([value isKindOfClass:[NSString class]]) {
 			valueString = [self encodeString:(NSString *) value];
+		} else
+		if ([value isKindOfClass:[NSArray class]]) {
+			BOOL first = YES;
+			for(NSString *val in (NSArray *)value) {
+				if(!first) {
+					valueString = [valueString stringByAppendingFormat:@",%@",[self encodeString:(NSString *) val]];
+				} else {
+					valueString = [valueString stringByAppendingString:[self encodeString:(NSString *) val]];
+					first = NO;
+				}
+			}
+			valueString = [NSString stringWithFormat:@"[%@]", valueString];
 		} else {
 			valueString = [self encodeObject:value];
 		}
