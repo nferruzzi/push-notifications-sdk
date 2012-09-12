@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,6 +78,22 @@ public class DeviceFeature2_5
 			if (value instanceof String || value instanceof Integer)
 			{
 				tagsObject.put(key, value);
+			}
+			else if (value instanceof List)
+			{
+				JSONArray values = new JSONArray();
+				for (Object item : (List) value)
+				{
+					if (item instanceof String || item instanceof Integer)
+					{
+						values.put(String.valueOf(item));
+					}
+					else
+					{
+						throw new RuntimeException("wrong type for tag: " + key);
+					}
+				}
+				tagsObject.put(key, values);
 			}
 			else
 			{

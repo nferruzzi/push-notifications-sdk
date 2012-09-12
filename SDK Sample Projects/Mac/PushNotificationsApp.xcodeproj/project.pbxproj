@@ -283,10 +283,7 @@
 				HEADER_SEARCH_PATHS = PushNotificationSDK/PushNotificationManager;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PROVISIONING_PROFILE = "58C5469A-CED2-447B-B08B-8CFD069EA4D9";
 				SDKROOT = macosx;
 			};
@@ -309,10 +306,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = PushNotificationSDK/PushNotificationManager;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PROVISIONING_PROFILE = "58C5469A-CED2-447B-B08B-8CFD069EA4D9";
 				SDKROOT = macosx;
 			};

@@ -31,9 +31,22 @@ namespace PushSDK
             _webClient.UploadStringCompleted += UploadStringCompleted;
         }
 
+        /// <summary>
+        /// Sending tag to server
+        /// </summary>
+        /// <param name="tagList">Tags list</param>
         public void SendRequest(List<KeyValuePair<string,object>> tagList)
         {
             _webClient.UploadStringAsync(Constants.TagsUrl, BuildRequest(tagList));
+        }
+
+        /// <summary>
+        /// Sending tag to server
+        /// </summary>
+        /// <param name="jTagList">tag format: [tagKey:tagValue]</param>
+        public void SendRequest(string jTagList)
+        {
+            _webClient.UploadStringAsync(Constants.TagsUrl, BuildRequest(jTagList));
         }
 
         private string BuildRequest(IEnumerable<KeyValuePair<string, object>> tagList)
@@ -43,13 +56,17 @@ namespace PushSDK
             {
                 tags.Add(new JProperty(tag.Key, tag.Value));
             }
+            return BuildRequest(tags.ToString());
+        }
 
+        private string BuildRequest(string tags)
+        {
             return (new JObject(
-                new JProperty("request",
-                              new JObject(
-                                  new JProperty("application", _appId),
-                                  new JProperty("hwid", SDKHelpers.GetDeviceUniqueId()),
-                                  new JProperty("tags", tags))))).ToString();
+               new JProperty("request",
+                             new JObject(
+                                 new JProperty("application", _appId),
+                                 new JProperty("hwid", SDKHelpers.GetDeviceUniqueId()),
+                                 new JProperty("tags", JObject.Parse(tags)))))).ToString();
         }
 
         private void UploadStringCompleted(object sender, UploadStringCompletedEventArgs e)

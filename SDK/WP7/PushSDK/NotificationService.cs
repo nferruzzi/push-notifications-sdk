@@ -31,19 +31,6 @@ namespace PushSDK
         #region public properties
 
         /// <summary>
-        /// Get push chanell uri
-        /// </summary>
-        public Uri ChannelUri
-        {
-            get { return _notificationChannel.ChannelUri; }
-        }
-
-        /// <summary>
-        /// Get application ID at server
-        /// </summary>
-        public string AppID { get; private set; }
-
-        /// <summary>
         /// Get content of last push notification
         /// </summary>
         public string LastPushContent
@@ -73,6 +60,8 @@ namespace PushSDK
 
         #region internal properties
 
+        internal string AppID { get; private set; }
+
         internal StatisticService Statistic { get; set; }
 
         internal ToastPush LastPush { get; set; }
@@ -85,17 +74,6 @@ namespace PushSDK
         /// User wants to see push
         /// </summary>
         public event EventHandler<CustomEventArgs<string>> OnPushAccepted;
-
-        /// <summary>
-        /// Push channel error occurred
-        /// </summary>
-        public event EventHandler<NotificationChannelErrorEventArgs> OnChannelErrorOccurred;
-
-        /// <summary>
-        /// Uri of push channel was updated
-        /// </summary>
-        public event EventHandler<NotificationChannelUriEventArgs> OnChannelUriUpdated;
-
         #endregion
 
         #region Singleton
@@ -133,7 +111,7 @@ namespace PushSDK
         #region public methods
 
         /// <summary>
-        /// Creates push channel and regestrite it at pushwoosh server to send unauthenticated pushes
+        /// Creates push channel and regestrate it at pushwoosh server to send unauthenticated pushes
         /// </summary>
         public void SubscribeToPushService()
         {
@@ -230,6 +208,7 @@ namespace PushSDK
                 if (key == "wp:Param")
                     LastPush = SDKHelpers.ParsePushData(e.Collection[key]);
             }
+            Debug.WriteLine("/********************************************************/");
 
             Deployment.Current.Dispatcher.BeginInvoke(() =>
                                                           {
@@ -258,7 +237,8 @@ namespace PushSDK
                 webBrowserTask.Show();
             }
 
-            if (!string.IsNullOrEmpty(_pushPage) && Application.Current.RootVisual is PhoneApplicationFrame)
+            if (!string.IsNullOrEmpty(_pushPage) && Application.Current.RootVisual is PhoneApplicationFrame 
+                && !_pushPage.EndsWith(((PhoneApplicationFrame)Application.Current.RootVisual).CurrentSource.ToString()))
             {
                 ((PhoneApplicationFrame) Application.Current.RootVisual).Navigated += OnNavigated;
                 ((PhoneApplicationFrame) Application.Current.RootVisual).Navigate(new Uri(_pushPage, UriKind.Relative));
@@ -284,9 +264,6 @@ namespace PushSDK
         {
             Debug.WriteLine("/********************************************************/");
             Debug.WriteLine("A push notification {0} error occurred.  {1} ({2}) {3}", e.ErrorType, e.Message, e.ErrorCode, e.ErrorAdditionalData);
-
-            if (OnChannelErrorOccurred != null)
-                OnChannelErrorOccurred(sender, e);
         }
 
         private void SubscribeToNotifications()
@@ -335,9 +312,6 @@ namespace PushSDK
 
             SubscribeToService(AppID);
             SubscribeToNotifications();
-
-            if (OnChannelUriUpdated != null)
-                OnChannelUriUpdated(sender, e);
         }
 
         #endregion
