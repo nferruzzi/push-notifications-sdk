@@ -445,15 +445,6 @@
 
 #import <objc/runtime.h>
 
-
-@interface UIApplication(SupressWarnings)
-- (void)application:(UIApplication *)application pw_didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken;
-- (void)application:(UIApplication *)application pw_didFailToRegisterForRemoteNotificationsWithError:(NSError *)err;
-- (void)application:(UIApplication *)application pw_didReceiveRemoteNotification:(NSDictionary *)userInfo;
-
-- (BOOL)application:(UIApplication *)application pw_didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
-@end
-
 @implementation UIApplication(Pushwoosh)
 
 BOOL dynamicDidFinishLaunching(id self, SEL _cmd, id application, id launchOptions) {
