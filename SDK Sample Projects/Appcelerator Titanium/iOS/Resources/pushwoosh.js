@@ -72,6 +72,36 @@ var PushWoosh = {
 		});
 	},
 	
+	setTags : function(tagsJsonObject, lambda, lambdaerror) {
+		var method = 'POST';
+		var token = PushWoosh.getToken();
+		var url = PushWoosh.baseurl + 'setTags';
+		
+		var params = {
+				request : {
+					application : PushWoosh.appCode,
+					hwid : Titanium.Platform.id,
+					tags: tagsJsonObject
+				}
+			};
+
+		payload = (params) ? JSON.stringify(params) : '';
+		Ti.API.info('sending tags with params ' + payload);
+		PushWoosh.helper(url, method, payload, function(data, status) {
+			Ti.API.log('setTags success: ' + JSON.stringify(status));
+			if(status == 200) {
+				lambda({
+					action : data,
+					success : status
+				});
+			} else {
+				Ti.API.log('error sending tags: ' + JSON.stringify(status));
+			}
+		}, function(xhr, error) {
+			Ti.API.log('xhr error sending tags: ' + JSON.stringify(error));
+		});
+	},
+	
 	helper : function(url, method, params, lambda, lambdaerror) {
 		var xhr = Ti.Network.createHTTPClient();
 		xhr.setTimeout(60000);

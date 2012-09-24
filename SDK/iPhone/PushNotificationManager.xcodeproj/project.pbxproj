@@ -239,6 +239,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = PushNotificationManager;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -253,6 +254,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = PushNotificationManager;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};

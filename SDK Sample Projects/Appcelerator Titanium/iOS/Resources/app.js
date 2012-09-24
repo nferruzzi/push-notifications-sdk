@@ -32,6 +32,13 @@ register.addEventListener('click', function() {
 			Ti.API.info('successfully registered for apple device token with ' + e.deviceToken);
 			PushWoosh.register(function(data) {
 				Ti.API.debug("PushWoosh register success: " + JSON.stringify(data));
+				
+				PushWoosh.setTags({alias:"device1"}, function(data) {
+						Ti.API.debug("PushWoosh sendTags success: " + JSON.stringify(data));
+					},function(error) {
+						Ti.API.warn("Couldn't setTags with PushWoosh");
+				});
+				
 			}, function(errorregistration) {
 				Ti.API.warn("Couldn't register with PushWoosh");
 			});

@@ -535,7 +535,7 @@ void dynamicDidReceiveRemoteNotification(id self, SEL _cmd, id application, id u
 	[self pw_setDelegate:delegate];
 }
 
-+ (void) initialize {
++ (void) load {
 	method_exchangeImplementations(class_getInstanceMethod(self, @selector(setDelegate:)), class_getInstanceMethod(self, @selector(pw_setDelegate:)));
 	
 	UIApplication *app = [UIApplication sharedApplication];
