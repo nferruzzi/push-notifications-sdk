@@ -15,14 +15,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import com.arellomobile.android.push.preference.SoundType;
-import com.arellomobile.android.push.preference.VibrateType;
 import com.arellomobile.android.push.utils.GeneralUtils;
+import com.arellomobile.android.push.utils.notification.NotificationFactory;
 import com.google.android.gcm.GCMBaseIntentService;
 
 public class PushGCMIntentService extends GCMBaseIntentService
@@ -122,8 +120,6 @@ public class PushGCMIntentService extends GCMBaseIntentService
 			notifyIntent.putExtra("pushBundle", extras);
 		}
 
-		NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
 		// first string will appear on the status bar once when message is added
 		CharSequence appName = context.getPackageManager().getApplicationLabel(context.getApplicationInfo());
 		if (null == appName)
@@ -131,34 +127,10 @@ public class PushGCMIntentService extends GCMBaseIntentService
 			appName = "";
 		}
 
-		String newMessageString = ": new message";
-		int resId = context.getResources().getIdentifier("new_push_message", "string", context.getPackageName());
-		if (0 != resId)
-		{
-			newMessageString = context.getString(resId);
-		}
-		Notification notification = new Notification(context.getApplicationInfo().icon, appName + newMessageString,
-				System.currentTimeMillis());
+		NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-		// remove the notification from the status bar after it is selected
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
-		String sound = (String) extras.get("s");
-		AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-		if (PushManager.sSoundType == SoundType.ALWAYS || (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL &&
-				PushManager.sSoundType == SoundType.DEFAULT_MODE))
-		{
-			// if always or normal type set
-			playPushNotificationSound(context, notification, sound);
-		}
-		if (PushManager.sVibrateType == VibrateType.ALWAYS || (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE &&
-				PushManager.sVibrateType == VibrateType.DEFAULT_MODE))
-		{
-			if (phoneHaveVibratePermission(context))
-			{
-				notification.defaults |= Notification.DEFAULT_VIBRATE;
-			}
-		}
+		Notification notification = NotificationFactory
+				.generateNotification(context, extras, appName, PushManager.sSoundType, PushManager.sVibrateType);
 
 		if (mSimpleNotification)
 		{
@@ -168,25 +140,6 @@ public class PushGCMIntentService extends GCMBaseIntentService
 		{
 			createMultyNotification(context, notifyIntent, notification, appName, title, manager);
 		}
-	}
-
-	private static boolean phoneHaveVibratePermission(Context context)
-	{
-		PackageManager packageManager = context.getPackageManager();
-		// check permission
-		try
-		{
-			int result = packageManager.checkPermission(Manifest.permission.VIBRATE, context.getPackageName());
-			if (result == PackageManager.PERMISSION_GRANTED)
-			{
-				return true;
-			}
-		}
-		catch (Exception e)
-		{
-			Log.e("PushWoosh", "error in checking permission", e);
-		}
-		return false;
 	}
 
 	private static void createSimpleNotification(Context context, Intent notifyIntent, Notification notification,
@@ -209,23 +162,6 @@ public class PushGCMIntentService extends GCMBaseIntentService
 		// this will appear in the notifications list
 		notification.setLatestEventInfo(context, appName, title, contentIntent);
 		manager.notify(PushManager.MESSAGE_ID++, notification);
-	}
-
-	private static void playPushNotificationSound(Context context, Notification notification, String sound)
-	{
-		if (sound != null && sound.length() != 0)
-		{
-			int soundId = context.getResources().getIdentifier(sound, "raw", context.getPackageName());
-			if (0 != soundId)
-			{
-				// if found valid resource id
-				notification.sound = Uri.parse("android.resource://" + context.getPackageName() + "/" + soundId);
-				return;
-			}
-		}
-
-		// try to get default one
-		notification.defaults |= Notification.DEFAULT_SOUND;
 	}
 }
 
