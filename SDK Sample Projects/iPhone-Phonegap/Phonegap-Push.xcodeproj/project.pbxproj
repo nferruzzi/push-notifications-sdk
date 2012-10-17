@@ -51,6 +51,7 @@
 		500B667015E42B71002B2233 /* PWRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B666515E42B71002B2233 /* PWRequest.m */; };
 		500B667115E42B71002B2233 /* PWRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B666715E42B71002B2233 /* PWRequestManager.m */; };
 		500B667215E42B71002B2233 /* PWSetTagsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B666915E42B71002B2233 /* PWSetTagsRequest.m */; };
+		506F68BC162EF6CB00968D5C /* PWSendBadgeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506F68BB162EF6CB00968D5C /* PWSendBadgeRequest.m */; };
 		50BC177815C43E5400337F46 /* PushNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BC177715C43E5400337F46 /* PushNotification.m */; };
 /* End PBXBuildFile section */
 
@@ -143,6 +144,8 @@
 		500B666715E42B71002B2233 /* PWRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWRequestManager.m; sourceTree = "<group>"; };
 		500B666815E42B71002B2233 /* PWSetTagsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWSetTagsRequest.h; sourceTree = "<group>"; };
 		500B666915E42B71002B2233 /* PWSetTagsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWSetTagsRequest.m; sourceTree = "<group>"; };
+		506F68BA162EF6CB00968D5C /* PWSendBadgeRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWSendBadgeRequest.h; sourceTree = "<group>"; };
+		506F68BB162EF6CB00968D5C /* PWSendBadgeRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWSendBadgeRequest.m; sourceTree = "<group>"; };
 		50BC177615C43E5400337F46 /* PushNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotification.h; sourceTree = "<group>"; };
 		50BC177715C43E5400337F46 /* PushNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushNotification.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Phonegap-Push-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Phonegap-Push-Info.plist"; path = "../Phonegap-Push-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
@@ -289,6 +292,8 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				506F68BA162EF6CB00968D5C /* PWSendBadgeRequest.h */,
+				506F68BB162EF6CB00968D5C /* PWSendBadgeRequest.m */,
 				500B665815E42B71002B2233 /* HtmlWebViewController.h */,
 				500B665915E42B71002B2233 /* HtmlWebViewController.m */,
 				500B665C15E42B71002B2233 /* PushNotificationManager.h */,
@@ -496,6 +501,7 @@
 				500B667015E42B71002B2233 /* PWRequest.m in Sources */,
 				500B667115E42B71002B2233 /* PWRequestManager.m in Sources */,
 				500B667215E42B71002B2233 /* PWSetTagsRequest.m in Sources */,
+				506F68BC162EF6CB00968D5C /* PWSendBadgeRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -581,7 +587,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 307D28A1123043350040C0FA /* CordovaBuildSettings.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = armv7;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Max Konev (A74JU7Q362)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -617,7 +623,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 307D28A1123043350040C0FA /* CordovaBuildSettings.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = armv7;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;

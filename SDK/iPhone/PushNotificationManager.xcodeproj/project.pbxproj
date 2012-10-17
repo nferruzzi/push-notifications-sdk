@@ -15,6 +15,8 @@
 		500B664315E3DCD2002B2233 /* PWRegisterDeviceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B663B15E3DCD2002B2233 /* PWRegisterDeviceRequest.m */; };
 		500B664415E3DCD2002B2233 /* PWSetTagsRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B663C15E3DCD2002B2233 /* PWSetTagsRequest.h */; };
 		500B664515E3DCD2002B2233 /* PWSetTagsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B663D15E3DCD2002B2233 /* PWSetTagsRequest.m */; };
+		5098D7FD162EF7FB009C720A /* PWSendBadgeRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 5098D7FB162EF7FB009C720A /* PWSendBadgeRequest.h */; };
+		5098D7FE162EF7FB009C720A /* PWSendBadgeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5098D7FC162EF7FB009C720A /* PWSendBadgeRequest.m */; };
 		50BD5D521365DA3C00275CDB /* HtmlWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 50BD5D3D1365DA3C00275CDB /* HtmlWebViewController.h */; };
 		50BD5D531365DA3C00275CDB /* HtmlWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BD5D3E1365DA3C00275CDB /* HtmlWebViewController.m */; };
 		50BD5D631365DA3C00275CDB /* PushNotificationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 50BD5D501365DA3C00275CDB /* PushNotificationManager.h */; };
@@ -37,6 +39,8 @@
 		500B663B15E3DCD2002B2233 /* PWRegisterDeviceRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PWRegisterDeviceRequest.m; path = Classes/PWRegisterDeviceRequest.m; sourceTree = "<group>"; };
 		500B663C15E3DCD2002B2233 /* PWSetTagsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PWSetTagsRequest.h; path = Classes/PWSetTagsRequest.h; sourceTree = "<group>"; };
 		500B663D15E3DCD2002B2233 /* PWSetTagsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PWSetTagsRequest.m; path = Classes/PWSetTagsRequest.m; sourceTree = "<group>"; };
+		5098D7FB162EF7FB009C720A /* PWSendBadgeRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PWSendBadgeRequest.h; path = Classes/PWSendBadgeRequest.h; sourceTree = "<group>"; };
+		5098D7FC162EF7FB009C720A /* PWSendBadgeRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PWSendBadgeRequest.m; path = Classes/PWSendBadgeRequest.m; sourceTree = "<group>"; };
 		50BD5D3D1365DA3C00275CDB /* HtmlWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HtmlWebViewController.h; path = Classes/HtmlWebViewController.h; sourceTree = "<group>"; };
 		50BD5D3E1365DA3C00275CDB /* HtmlWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HtmlWebViewController.m; path = Classes/HtmlWebViewController.m; sourceTree = "<group>"; };
 		50BD5D501365DA3C00275CDB /* PushNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PushNotificationManager.h; path = Classes/PushNotificationManager.h; sourceTree = "<group>"; };
@@ -115,6 +119,8 @@
 		A4F8238515C9257D00913778 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				5098D7FB162EF7FB009C720A /* PWSendBadgeRequest.h */,
+				5098D7FC162EF7FB009C720A /* PWSendBadgeRequest.m */,
 				500B663615E3DCD2002B2233 /* PWGetNearestZoneRequest.h */,
 				500B663715E3DCD2002B2233 /* PWGetNearestZoneRequest.m */,
 				500B663815E3DCD2002B2233 /* PWPushStatRequest.h */,
@@ -155,6 +161,7 @@
 				500B664015E3DCD2002B2233 /* PWPushStatRequest.h in Headers */,
 				500B664215E3DCD2002B2233 /* PWRegisterDeviceRequest.h in Headers */,
 				500B664415E3DCD2002B2233 /* PWSetTagsRequest.h in Headers */,
+				5098D7FD162EF7FB009C720A /* PWSendBadgeRequest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,6 +226,7 @@
 				500B664115E3DCD2002B2233 /* PWPushStatRequest.m in Sources */,
 				500B664315E3DCD2002B2233 /* PWRegisterDeviceRequest.m in Sources */,
 				500B664515E3DCD2002B2233 /* PWSetTagsRequest.m in Sources */,
+				5098D7FE162EF7FB009C720A /* PWSendBadgeRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,8 +252,8 @@
 				GCC_THUMB_SUPPORT = NO;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = PushNotificationManager;
-				VALID_ARCHS = "armv6 armv7 armv7s";
 				SKIP_INSTALL = YES;
+				VALID_ARCHS = "armv6 armv7 armv7s";
 			};
 			name = Debug;
 		};
@@ -265,8 +273,8 @@
 				GCC_THUMB_SUPPORT = NO;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = PushNotificationManager;
-				VALID_ARCHS = "armv6 armv7 armv7s";
 				SKIP_INSTALL = YES;
+				VALID_ARCHS = "armv6 armv7 armv7s";
 			};
 			name = Release;
 		};
