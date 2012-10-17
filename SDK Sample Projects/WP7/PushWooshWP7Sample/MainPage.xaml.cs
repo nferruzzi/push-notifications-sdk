@@ -18,12 +18,16 @@ namespace PushWooshWP7Sample
 
             _service.Tags.OnError += (sender, args) => MessageBox.Show("Error while sending the tags: \n" + args.Result);
             _service.Tags.OnSendingComplete += (sender, args) =>
-                                                                      {
-                                                                          MessageBox.Show("Tag has been sent!");
+                                                   {
+                                                       MessageBox.Show("Tag has been sent!");
+                                                       DisplaySkippedTags(args.Result);
+                                                   };
+            _service.OnPushTokenUpdated += (sender, args) =>
+                                               {
+                                                   tbPushToken.Text = args.Result.ToString();
+                                               };
 
-                                                                          DisplaySkippedTags(args.Result);
-                                    
-                                                                      };
+            tbPushToken.Text = _service.PushToken;
             ResetMyMainTile();
         }
 

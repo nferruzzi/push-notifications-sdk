@@ -15,8 +15,8 @@ namespace PushSDK
         public event EventHandler SuccessefulyRegistered;
         public event EventHandler SuccessefulyUnregistered;
 
-        public event EventHandler<CustomEventArgs<string>> RegisterError;
-        public event EventHandler<CustomEventArgs<string>> UnregisterError;
+        public event CustomEventHandler<string>  RegisterError;
+        public event CustomEventHandler<string> UnregisterError;
 
         private static string LastRegisterDateKey
         {
@@ -56,7 +56,7 @@ namespace PushSDK
             RemoveLastRegistrationDate();
         }
 
-        private void SendRequest(Uri url, EventHandler successEvent, EventHandler<CustomEventArgs<string>> errorEvent)
+        private void SendRequest(Uri url, EventHandler successEvent, CustomEventHandler<string> errorEvent)
         {
             var webClient = new WebClient();
             webClient.UploadStringCompleted += (sender, args) =>
@@ -101,11 +101,11 @@ namespace PushSDK
 
         private static void RemoveLastRegistrationDate()
         {
-            if (IsolatedStorageSettings.ApplicationSettings.Contains(LastRegisterDateKey))
-            {
-                IsolatedStorageSettings.ApplicationSettings.Remove(LastRegisterDateKey);
-                IsolatedStorageSettings.ApplicationSettings.Save();
-            }
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(LastRegisterDateKey))
+                return;
+
+            IsolatedStorageSettings.ApplicationSettings.Remove(LastRegisterDateKey);
+            IsolatedStorageSettings.ApplicationSettings.Save();
         }
     }
 }

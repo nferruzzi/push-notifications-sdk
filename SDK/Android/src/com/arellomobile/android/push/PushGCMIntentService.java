@@ -8,13 +8,11 @@
 
 package com.arellomobile.android.push;
 
-import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +20,8 @@ import android.util.Log;
 import com.arellomobile.android.push.utils.GeneralUtils;
 import com.arellomobile.android.push.utils.notification.NotificationFactory;
 import com.google.android.gcm.GCMBaseIntentService;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class PushGCMIntentService extends GCMBaseIntentService
 {
@@ -140,6 +140,35 @@ public class PushGCMIntentService extends GCMBaseIntentService
 		{
 			createMultyNotification(context, notifyIntent, notification, appName, title, manager);
 		}
+
+		generateBroadcast(context, extras);
+	}
+
+	private static void generateBroadcast(Context context, Bundle extras)
+	{
+		Intent broadcastIntent = new Intent();
+		broadcastIntent.setAction(context.getPackageName() + ".action.PUSH_MESSAGE_RECEIVE");
+		Bundle pushBundle = new Bundle();
+
+		JSONObject dataObject = new JSONObject();
+		try
+		{
+			if (extras.containsKey("title"))
+			{
+				dataObject.put("title", extras.get("title"));
+			}
+			if (extras.containsKey("u"))
+			{
+				dataObject.put("userdata", new JSONObject(extras.getString("u")));
+			}
+		}
+		catch (JSONException e)
+		{
+			// pass
+		}
+		broadcastIntent.putExtra(BasePushMessageReceiver.DATA_KEY, dataObject.toString());
+
+		context.sendBroadcast(broadcastIntent, context.getPackageName() + ".permission.C2D_MESSAGE");
 	}
 
 	private static void createSimpleNotification(Context context, Intent notifyIntent, Notification notification,

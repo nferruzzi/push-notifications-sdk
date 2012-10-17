@@ -16,7 +16,8 @@
                             mc:Ignorable="d">
 
     <!--  LayoutRoot is the root grid where all page content is placed  -->
-    <Grid>
+    <!--  LayoutRoot is the root grid where all page content is placed  -->
+    <ScrollViewer>
         <StackPanel x:Name="LayoutRoot"
                     Margin="12,10"
                     Background="Transparent">
@@ -32,6 +33,13 @@
                        Text="Waiting for push notification"
                        TextWrapping="Wrap" />
             <TextBlock Margin="0,30,0,0"
+            	FontSize="{StaticResource PhoneFontSizeMediumLarge}"
+            	Text="Push token:"
+            	TextWrapping="Wrap" />
+            <TextBlock x:Name="tbPushToken" Margin="0"
+            	FontSize="{StaticResource PhoneFontSizeMediumLarge}"
+            	TextWrapping="Wrap" />
+            <TextBlock Margin="0,10,0,0"
                        FontSize="{StaticResource PhoneFontSizeMediumLarge}"
                        Text="Tag title:"
                        TextWrapping="Wrap" />
@@ -55,5 +63,5 @@
                     Click="ButtonClick"
                     Content="Unsubscribe" />
         </StackPanel>
-    </Grid>
+    </ScrollViewer>
 </phone:PhoneApplicationPage>
