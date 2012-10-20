@@ -78,29 +78,3 @@
 	});
 
 })(window.cordova || window.Cordova || window.PhoneGap);
-
-function initPushwoosh()
-{
-	var pushNotification = window.plugins.pushNotification;
-	// CHANGE projectid & appid
-	pushNotification.registerDevice({ projectid: "", appid : "" },
-									function(status) {
-										var pushToken = status;
-										console.warn('push token: ' + pushToken);
-									},
-									function(status) {
-									    console.warn(JSON.stringify(['failed to register ', status]));
-									});
-
-	document.addEventListener('push-notification', function(event) {
-	                            var title = event.notification.title;
-	                            var userData = event.notification.userdata;
-	                            
-	                            if(typeof(userData) != "undefined") {
-									console.warn('user data: ' + JSON.stringify(userData));
-								}
-									
-								navigator.notification.alert(title);
-							  });
-
- }

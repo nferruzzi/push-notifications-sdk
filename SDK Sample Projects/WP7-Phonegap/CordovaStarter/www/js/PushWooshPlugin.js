@@ -22,5 +22,9 @@
     sendingTags: function (successCallback, errorCallback, tags) {
         console.log("Sending tags");
         cordova.exec(successCallback, errorCallback, "PWTags", "SendTags", tags);
+    },
+    userToken: function (successCallback, errorCallback, tags) {
+        console.log("Geting user token");
+        cordova.exec(successCallback, errorCallback, "PWUserToken", "GetUserToken", tags);
     }
 }

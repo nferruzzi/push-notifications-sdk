@@ -87,6 +87,7 @@
     <Compile Include="Plugins\PushWoosh\PWGeozone.cs" />
     <Compile Include="Plugins\PushWoosh\PWNotification.cs" />
     <Compile Include="Plugins\PushWoosh\PWUserData.cs" />
+    <Compile Include="Plugins\PushWoosh\PWUserToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

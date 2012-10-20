@@ -18,11 +18,6 @@ namespace PushSDK
         public event CustomEventHandler<string>  RegisterError;
         public event CustomEventHandler<string> UnregisterError;
 
-        private static string LastRegisterDateKey
-        {
-            get { return String.Format("PushWooshLastRegisterDate_{0}", SDKHelpers.GetDeviceUniqueId()); }
-        }
-
         public void Register(string appID, Uri pushUri)
         {
             Debug.WriteLine("/********************************************************/");
@@ -31,19 +26,7 @@ namespace PushSDK
             _request.AppID = appID;
             _request.PushToken = pushUri;
 
-            //Can register today
-            bool canRegister = true;
-
-            if (IsolatedStorageSettings.ApplicationSettings.Contains(LastRegisterDateKey))
-            {
-                var registerDate = (DateTime)IsolatedStorageSettings.ApplicationSettings[LastRegisterDateKey];
-                canRegister = DateTime.Now.Subtract(registerDate) >= TimeSpan.FromDays(1);
-            }
-
-            if (canRegister)
-                SendRequest(Constants.RegisterUrl, SuccessefulyRegistered, RegisterError);
-            else
-                Debug.WriteLine("Registration request was sent less than 24 hours ago");
+            SendRequest(Constants.RegisterUrl, SuccessefulyRegistered, RegisterError);
         }
 
         public void Unregister()
@@ -52,8 +35,6 @@ namespace PushSDK
             Debug.WriteLine("Unregister");
 
             SendRequest(Constants.UnregisterUrl, SuccessefulyUnregistered, UnregisterError);
-
-            RemoveLastRegistrationDate();
         }
 
         private void SendRequest(Uri url, EventHandler successEvent, CustomEventHandler<string> errorEvent)
@@ -75,10 +56,6 @@ namespace PushSDK
                                                            {
                                                                if (successEvent != null)
                                                                {
-                                                                   //register today
-                                                                   IsolatedStorageSettings.ApplicationSettings[LastRegisterDateKey] = DateTime.Now;
-                                                                   IsolatedStorageSettings.ApplicationSettings.Save();
-
                                                                    successEvent(this, null);
                                                                }
                                                            }
@@ -97,15 +74,6 @@ namespace PushSDK
             Debug.WriteLine("Sending request: " + request);
 
             webClient.UploadStringAsync(url, request);
-        }
-
-        private static void RemoveLastRegistrationDate()
-        {
-            if (!IsolatedStorageSettings.ApplicationSettings.Contains(LastRegisterDateKey))
-                return;
-
-            IsolatedStorageSettings.ApplicationSettings.Remove(LastRegisterDateKey);
-            IsolatedStorageSettings.ApplicationSettings.Save();
         }
     }
 }

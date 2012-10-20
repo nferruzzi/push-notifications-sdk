@@ -162,7 +162,8 @@ namespace PushSDK
                 Debug.WriteLine("Trying to open the channel");
                 _notificationChannel.Open();
             }
-            PushToken = _notificationChannel.ChannelUri.ToString();
+            if (_notificationChannel.ChannelUri != null)
+                PushToken = _notificationChannel.ChannelUri.ToString();
         }
 
         /// <summary>

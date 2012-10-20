@@ -10,6 +10,7 @@ var app = {
 
         //Subscribe to push notification
         PushWooshPlugin.subscribe(app.onPushRecive, app.onError);
+        PushWooshPlugin.userToken(app.getUserToken, app.onError);
     },
     onPushRecive: function (pushContent) {
         console.log("Push has been recived: " + pushContent);
@@ -68,5 +69,9 @@ var app = {
     },
     onSendingComplete: function () {
         console.log("Tag sending complete");
+    },
+    getUserToken: function (result) {
+        console.log("Get user toket: " + result);
+        $("#userToken").html(result);
     }
 };

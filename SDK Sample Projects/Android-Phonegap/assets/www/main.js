@@ -157,6 +157,31 @@ function toggleCompass() {
     }
 }
 
+function initPushwoosh()
+{
+	var pushNotification = window.plugins.pushNotification;
+	
+	pushNotification.registerDevice({ projectid: "GOOGLE_PROJECT_ID", appid : "PUSHWOOSH_APP_ID" },
+									function(status) {
+										var pushToken = status;
+										console.warn('push token: ' + pushToken);
+									},
+									function(status) {
+									    console.warn(JSON.stringify(['failed to register ', status]));
+									});
+
+	document.addEventListener('push-notification', function(event) {
+	                            var title = event.notification.title;
+	                            var userData = event.notification.userdata;
+	                            
+	                            if(typeof(userData) != "undefined") {
+									console.warn('user data: ' + JSON.stringify(userData));
+								}
+									
+								navigator.notification.alert(title);
+							  });
+ }
+
 function init() {
     // the next line makes it impossible to see Contacts on the HTC Evo since it
     // doesn't have a scroll button

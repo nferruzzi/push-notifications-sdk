@@ -1,13 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
-  <App xmlns="" ProductID="{fdde800c-8993-4682-b212-ce02d6afb2c5}" Title="PWServerTestApp" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="PushWooshWP7Sample author" Description="Sample description" Publisher="PushWoosh">
+  <App xmlns="" ProductID="{fdde800c-8993-4682-b212-ce02d6afb2c5}" Title="Pushwoosh Demo" RuntimeType="Silverlight" Version="2.5.0.0" Genre="apps.normal" Author="Arello Mobile Ltd." Description="Pushwoosh Demo application" Publisher="Arello Mobile Ltd." BitsPerPixel="32">
     <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_IDENTITY_DEVICE" />
-      <Capability Name="ID_CAP_IDENTITY_USER" />
       <Capability Name="ID_CAP_LOCATION" />
-      <Capability Name="ID_CAP_MEDIALIB" />
-      <Capability Name="ID_CAP_MICROPHONE" />
       <Capability Name="ID_CAP_NETWORKING" />
       <Capability Name="ID_CAP_PUSH_NOTIFICATION" />
     </Capabilities>
@@ -19,7 +16,7 @@
         <TemplateType5>
           <BackgroundImageURI IsRelative="true" IsResource="false">Background.png</BackgroundImageURI>
           <Count>0</Count>
-          <Title>PWServerTestApp</Title>
+          <Title>Pushwoosh</Title>
         </TemplateType5>
       </PrimaryToken>
     </Tokens>

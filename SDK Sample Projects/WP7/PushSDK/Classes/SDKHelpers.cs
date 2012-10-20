@@ -25,7 +25,7 @@ namespace PushSDK.Classes
 
         public static ToastPush ParsePushData(string url)
         {
-            Dictionary<string, string> pushParams = ParseQueryString(HttpUtility.UrlDecode(url));
+            Dictionary<string, string> pushParams = ParseQueryString(url);
             return new ToastPush
                        {
                            Contnet = pushParams.ContainsKey("content") ? pushParams["content"] : string.Empty,

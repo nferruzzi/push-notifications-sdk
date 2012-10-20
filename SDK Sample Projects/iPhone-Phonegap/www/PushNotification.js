@@ -78,27 +78,3 @@
 	});
 
 })(window.cordova || window.Cordova || window.PhoneGap);
-
-function initPushwoosh()
-{
-	var pushNotification = window.plugins.pushNotification;
-	pushNotification.onDeviceReady();
-	
-	pushNotification.registerDevice({alert:true, badge:true, sound:true, pw_appid:"PUSHWOOSH_APP_CODE", appname:"APP_NAME"},
-									function(status) {
-										var deviceToken = status['deviceToken'];
-										console.warn('registerDevice: ' + deviceToken);
-									},
-									function(status) {
-										console.warn('failed to register : ' + JSON.stringify(status));
-										navigator.notification.alert(JSON.stringify(['failed to register ', status]));
-									});
-	
-	pushNotification.setApplicationIconBadgeNumber(0);
-	
-	document.addEventListener('push-notification', function(event) {
-									var notification = event.notification;
-									navigator.notification.alert(notification.aps.alert);
-									pushNotification.setApplicationIconBadgeNumber(0);
-							  });
-}
