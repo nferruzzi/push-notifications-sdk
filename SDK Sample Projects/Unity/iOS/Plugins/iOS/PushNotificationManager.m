@@ -508,90 +508,18 @@
 
 @end
 
-#pragma mark -
-#pragma mark Unity Black Magic
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-	void UnitySendMessage(const char* obj, const char* method, const char* msg);
-#ifdef __cplusplus
-}
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-	typedef void* MonoDomain;
-	typedef void* MonoAssembly;
-	typedef void* MonoImage;
-	typedef void* MonoClass;
-	typedef void* MonoObject;
-	typedef void* MonoMethodDesc;
-	typedef void* MonoMethod;
-	typedef void* MonoString;
-	typedef int gboolean;
-	typedef void* gpointer;
-	
-	MonoDomain *mono_domain_get();
-	MonoAssembly *mono_domain_assembly_open(MonoDomain *domain, const char *assemblyName);
-	MonoImage *mono_assembly_get_image(MonoAssembly *assembly);
-	MonoMethodDesc *mono_method_desc_new(const char *methodString, gboolean useNamespace);
-	MonoMethodDesc *mono_method_desc_free(MonoMethodDesc *desc);
-	MonoMethod *mono_method_desc_search_in_image(MonoMethodDesc *methodDesc, MonoImage *image);
-	MonoObject *mono_runtime_invoke(MonoMethod *method, void *obj, void **params, MonoObject **exc);
-	MonoClass *mono_class_from_name(MonoImage *image, const char *namespaceString, const char *classnameString);
-	MonoMethod *mono_class_get_methods(MonoClass*, gpointer* iter);
-	MonoString *mono_string_new(MonoDomain *domain, const char *text);
-	char* mono_method_get_name (MonoMethod *method);
-#ifdef __cplusplus
-}
-#endif
-
-MonoDomain *domain;
-NSString *assemblyPath;
-MonoAssembly *monoAssembly;
-MonoImage *monoImage;
-
-MonoMethodDesc *onRegisteredForPushNotificationsDesc;
-MonoMethod *onRegisteredForPushNotificationsMethod;
-
-MonoMethodDesc *onFailedToRegisteredForPushNotificationsDesc;
-MonoMethod *onFailedToRegisteredForPushNotificationsMethod;
-
-MonoMethodDesc *onPushNotificationsReceivedDesc;
-MonoMethod *onPushNotificationsReceivedMethod;
-
-void InitUnityBlackMagic()
-{
-	if(assemblyPath)
-		return;
-
-	assemblyPath = [[[NSBundle mainBundle] bundlePath]
-						stringByAppendingPathComponent:@"Data/Managed/Assembly-CSharp.dll"];
-	
-	NSLog(@"Native plugin -> assembly path: %@", assemblyPath);
-	
-	domain = mono_domain_get();
-	monoAssembly = mono_domain_assembly_open(domain, assemblyPath.UTF8String);
-	monoImage = mono_assembly_get_image(monoAssembly);
-	
-	onRegisteredForPushNotificationsDesc = mono_method_desc_new("PushNotifications:onRegisteredForPushNotifications", FALSE);
-	onRegisteredForPushNotificationsMethod = mono_method_desc_search_in_image(onRegisteredForPushNotificationsDesc, monoImage);
-	mono_method_desc_free(onRegisteredForPushNotificationsDesc);
-	
-	onFailedToRegisteredForPushNotificationsDesc = mono_method_desc_new("PushNotifications:onFailedToRegisteredForPushNotifications", FALSE);
-	onFailedToRegisteredForPushNotificationsMethod = mono_method_desc_search_in_image(onFailedToRegisteredForPushNotificationsDesc, monoImage);
-	mono_method_desc_free(onFailedToRegisteredForPushNotificationsDesc);
-	
-	onPushNotificationsReceivedDesc = mono_method_desc_new("PushNotifications:onPushNotificationsReceived", FALSE);
-	onPushNotificationsReceivedMethod = mono_method_desc_search_in_image(onPushNotificationsReceivedDesc, monoImage);
-	mono_method_desc_free(onPushNotificationsReceivedDesc);
-}
-
 void * _getPushToken()
 {
 	return (void *)[[[PushNotificationManager pushManager] getPushToken] UTF8String];
+}
+
+char * g_listenerName = 0;
+void setListenerName(char * listenerName)
+{
+	free(g_listenerName); g_listenerName = 0;
+	int len = strlen(listenerName);
+	g_listenerName = malloc(len+1);
+	strcpy(g_listenerName, listenerName);
 }
 
 void setIntTag(char * tagName, int tagValue)
@@ -621,28 +549,29 @@ void setStringTag(char * tagName, char * tagValue)
 //succesfully registered for push notifications
 - (void) onDidRegisterForRemoteNotificationsWithDeviceToken:(NSString *)token
 {
-	InitUnityBlackMagic();
+	if(!g_listenerName)
+		return;
 	
 	const char * str = [token UTF8String];
-	void *args[] = { mono_string_new (domain, str) };
-	mono_runtime_invoke(onRegisteredForPushNotificationsMethod, NULL, args, NULL);
+	UnitySendMessage(g_listenerName, "onRegisteredForPushNotifications", str);
 }
 
 //failed to register for push notifications
 - (void) onDidFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-	InitUnityBlackMagic();
+	if(!g_listenerName)
+		return;
 	
 	const char * str = [[error description] UTF8String];
-	void *args[] = { mono_string_new (domain, str) };
-	mono_runtime_invoke(onFailedToRegisteredForPushNotificationsMethod, NULL, args, NULL);
+	UnitySendMessage(g_listenerName, "onFailedToRegisteredForPushNotifications", str);
 }
 
 //handle push notification, display alert, if this method is implemented onPushAccepted will not be called, internal message boxes will not be displayed
 - (void) onPushReceived:(PushNotificationManager *)pushManager withNotification:(NSDictionary *)pushNotification onStart:(BOOL)onStart
 {
-	InitUnityBlackMagic();
-
+	if(!g_listenerName)
+		return;
+	
 	NSMutableArray *requestStringBuilder = [NSMutableArray new];
 	
 	for (NSString *key in [pushNotification allKeys]) {
@@ -653,8 +582,7 @@ void setStringTag(char * tagName, char * tagValue)
 	[requestStringBuilder release];
 
 	const char * str = [jsonRequestData UTF8String];
-	void *args[] = { mono_string_new (domain, str) };
-	mono_runtime_invoke(onPushNotificationsReceivedMethod, NULL, args, NULL);
+	UnitySendMessage(g_listenerName, "onPushNotificationsReceived", str);
 }
 
 BOOL dynamicDidFinishLaunching(id self, SEL _cmd, id application, id launchOptions) {

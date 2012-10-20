@@ -2,8 +2,11 @@ using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices;
 
-public class PushNotifications : MonoBehaviour {
-	
+public class PushNotificationsIOS : MonoBehaviour {
+
+	[System.Runtime.InteropServices.DllImport("__Internal")]
+	extern static public void setListenerName(string listenerName);
+
 	[System.Runtime.InteropServices.DllImport("__Internal")]
 	extern static public System.IntPtr _getPushToken();
 	
@@ -13,24 +16,34 @@ public class PushNotifications : MonoBehaviour {
 	[System.Runtime.InteropServices.DllImport("__Internal")]
 	extern static public void setStringTag(string tagName, string tagValue);
 	
+	// Use this for initialization
+	void Start () {
+		setListenerName(this.gameObject.name);
+		
+		Debug.Log(getPushToken());
+		setIntTag("DeviceType", 5);
+		setStringTag("DeviceName", "Shader");
+	}
+
+	
 	static public string getPushToken()
 	{
 		return Marshal.PtrToStringAnsi(_getPushToken());
 	}
 
-	static void onRegisteredForPushNotifications(string token)
+	void onRegisteredForPushNotifications(string token)
 	{
 		//do handling here
 		Debug.Log(token);
 	}
 
-	static void onFailedToRegisteredForPushNotifications(string error)
+	void onFailedToRegisteredForPushNotifications(string error)
 	{
 		//do handling here
 		Debug.Log(error);
 	}
 
-	static void onPushNotificationsReceived(string payload)
+	void onPushNotificationsReceived(string payload)
 	{
 		//do handling here
 		Debug.Log(payload);
