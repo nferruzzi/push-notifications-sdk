@@ -8,10 +8,7 @@ public class PushNotificationsAndroid : MonoBehaviour {
 		InitPushwoosh();
 		
 		Debug.Log(this.gameObject.name);
-			
 		Debug.Log(getPushToken());
-		setIntTag("DeviceType", 5);
-		setStringTag("DeviceName", "Shader");
 	}
 	
 	// Update is called once per frame

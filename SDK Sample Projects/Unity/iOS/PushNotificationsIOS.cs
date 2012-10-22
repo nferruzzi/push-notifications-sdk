@@ -19,10 +19,7 @@ public class PushNotificationsIOS : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		setListenerName(this.gameObject.name);
-		
 		Debug.Log(getPushToken());
-		setIntTag("DeviceType", 5);
-		setStringTag("DeviceName", "Shader");
 	}
 
 	
