@@ -24,8 +24,6 @@ namespace PushSDK
         private HttpNotificationChannel _notificationChannel;
 
         private RegistrationService _registrationService;
-
-
         #endregion
 
         #region public properties
@@ -56,13 +54,17 @@ namespace PushSDK
         /// </summary>
         public GeozoneService GeoZone { get; private set; }
 
+        /// <summary>
+        /// Get push token
+        /// </summary>
+        public string PushToken { get; private set; }
         #endregion
 
         #region internal properties
 
-        internal string AppID { get; private set; }
+        private string AppID { get; set; }
 
-        internal StatisticService Statistic { get; set; }
+        private StatisticService Statistic { get; set; }
 
         internal ToastPush LastPush { get; set; }
 
@@ -73,7 +75,12 @@ namespace PushSDK
         /// <summary>
         /// User wants to see push
         /// </summary>
-        public event EventHandler<CustomEventArgs<string>> OnPushAccepted;
+        public event CustomEventHandler<string> OnPushAccepted;
+
+        /// <summary>
+        /// On push token updated
+        /// </summary>
+        public event CustomEventHandler<Uri> OnPushTokenUpdated;
         #endregion
 
         #region Singleton
@@ -139,20 +146,14 @@ namespace PushSDK
 
                 Debug.WriteLine("Subscribe to the channel to Tile and Toast notifications");
                 SubscribeToNotifications();
+
             }
             else
-            
-            
-            
-            
-            
-            
-            
-            
             {
                 Debug.WriteLine("Trying to create a new channel...");
-                if (string.IsNullOrEmpty(serviceName)) _notificationChannel = new HttpNotificationChannel(Constants.ChannelName);
-                else _notificationChannel = new HttpNotificationChannel(Constants.ChannelName, serviceName);
+                _notificationChannel = string.IsNullOrEmpty(serviceName)
+                                           ? new HttpNotificationChannel(Constants.ChannelName)
+                                           : new HttpNotificationChannel(Constants.ChannelName, serviceName);
 
                 Debug.WriteLine("New Push Notification channel created successfully");
 
@@ -161,6 +162,8 @@ namespace PushSDK
                 Debug.WriteLine("Trying to open the channel");
                 _notificationChannel.Open();
             }
+            if (_notificationChannel.ChannelUri != null)
+                PushToken = _notificationChannel.ChannelUri.ToString();
         }
 
         /// <summary>
@@ -189,12 +192,13 @@ namespace PushSDK
         private void SubscribeToChannelEvents()
         {
             //Register to UriUpdated event - occurs when channel successfully opens
-            _notificationChannel.ChannelUriUpdated += Channel_ChannelUriUpdated;
+            _notificationChannel.ChannelUriUpdated += ChannelChannelUriUpdated;
 
             //general error handling for push channel
             _notificationChannel.ErrorOccurred += Channel_ErrorOccurred;
 
             _notificationChannel.ShellToastNotificationReceived += ChannelShellToastNotificationReceived;
+
         }
 
         private void ChannelShellToastNotificationReceived(object sender, NotificationEventArgs e)
@@ -245,7 +249,6 @@ namespace PushSDK
             }
             else
                 PushAccepted();
-
         }
 
         private void OnNavigated(object sender, NavigationEventArgs navigationEventArgs)
@@ -287,10 +290,10 @@ namespace PushSDK
             {
                 Debug.WriteLine("Registering to Tile Notifications");
                 // you can register the phone application to receive tile images from remote servers [this is optional]
-                if (_tileTrustedServers != null)
-                    _notificationChannel.BindToShellTile(_tileTrustedServers);
-                else
+                if (_tileTrustedServers == null)
                     _notificationChannel.BindToShellTile();
+                else
+                    _notificationChannel.BindToShellTile(_tileTrustedServers);
             }
         }
 
@@ -305,10 +308,15 @@ namespace PushSDK
             }
         }
 
-        private void Channel_ChannelUriUpdated(object sender, NotificationChannelUriEventArgs e)
+        private void ChannelChannelUriUpdated(object sender, NotificationChannelUriEventArgs e)
         {
             Debug.WriteLine("Channel opened. Got Uri:\n" + _notificationChannel.ChannelUri);
             Debug.WriteLine("Subscribing to channel events");
+
+            PushToken = _notificationChannel.ChannelUri.ToString();
+
+            if (OnPushTokenUpdated != null)
+                Deployment.Current.Dispatcher.BeginInvoke(() => OnPushTokenUpdated(this, new CustomEventArgs<Uri> { Result = _notificationChannel.ChannelUri }));
 
             SubscribeToService(AppID);
             SubscribeToNotifications();

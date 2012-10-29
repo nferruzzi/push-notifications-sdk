@@ -13,6 +13,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+
 import com.arellomobile.android.push.exception.PushWooshException;
 import com.arellomobile.android.push.preference.SoundType;
 import com.arellomobile.android.push.preference.VibrateType;
@@ -55,6 +57,9 @@ public class PushManager
 	static SoundType sSoundType = SoundType.DEFAULT_MODE;
 	static VibrateType sVibrateType = VibrateType.DEFAULT_MODE;
 
+	Context getContext() {
+		return mContext;
+	}
 
 	private static final Object mSyncObj = new Object();
 	private static AsyncTask<Void, Void, Void> mRegistrationAsyncTask;
@@ -192,6 +197,14 @@ public class PushManager
 	public static void sendTagsFromUI(Context context, Map<String, Object> tags, SendPushTagsCallBack callBack)
 	{
 		new SendPushTagsAsyncTask(context, callBack).execute(tags);
+	}
+
+	public static void sendTags(final Context context, final Map<String, Object> tags, final SendPushTagsCallBack callBack)
+	{
+		Handler handler = new Handler(context.getMainLooper());
+		handler.post(new Runnable() {
+			public void run() { new SendPushTagsAsyncTask(context, callBack).execute(tags); }
+		});
 	}
 
 	//	------------------- 2.5 Features ENDS -------------------
