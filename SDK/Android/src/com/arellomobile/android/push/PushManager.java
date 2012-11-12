@@ -299,15 +299,15 @@ public class PushManager
 	private boolean neededToRequestPushWooshServer(Context context)
 	{
 		Calendar nowTime = Calendar.getInstance();
-		Calendar dayBefore = Calendar.getInstance();
-		dayBefore.roll(Calendar.DAY_OF_MONTH, false); // decrement one day
+		Calendar tenMinutesBefore = Calendar.getInstance();
+		tenMinutesBefore.add(Calendar.MINUTE, -10); // decrement 10 minutes
 
 		Calendar lastPushWooshRegistrationTime = Calendar.getInstance();
 		lastPushWooshRegistrationTime.setTime(new Date(PreferenceUtils.getLastRegistration(context)));
 
-		if (dayBefore.before(lastPushWooshRegistrationTime) && lastPushWooshRegistrationTime.before(nowTime))
+		if (tenMinutesBefore.before(lastPushWooshRegistrationTime) && lastPushWooshRegistrationTime.before(nowTime))
 		{
-			// dayBefore <= lastPushWooshRegistrationTime <= nowTime
+			// tenMinutesBefore <= lastPushWooshRegistrationTime <= nowTime
 			return false;
 		}
 		return true;

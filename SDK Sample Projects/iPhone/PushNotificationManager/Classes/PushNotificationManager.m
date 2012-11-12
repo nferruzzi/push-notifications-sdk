@@ -279,6 +279,12 @@
 	[self performSelectorInBackground:@selector(sendDevTokenToServer:) withObject:deviceID];
 }
 
+- (void) handlePushRegistrationFailure:(NSError *) error {
+	if([delegate respondsToSelector:@selector(onDidFailToRegisterForRemoteNotificationsWithError:)] ) {
+		[delegate performSelectorOnMainThread:@selector(onDidFailToRegisterForRemoteNotificationsWithError:) withObject:error waitUntilDone:NO];
+	}
+}
+
 - (NSString *) getPushToken {
 	return [[NSUserDefaults standardUserDefaults] objectForKey:@"PWPushUserId"];
 }
@@ -472,6 +478,9 @@
 }
 
 - (void) sendBadgesBackground: (NSNumber *) badge {
+	if([[PushNotificationManager pushManager] getPushToken] == nil)
+		return;
+	
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	PWSendBadgeRequest *request = [[PWSendBadgeRequest alloc] init];
@@ -548,6 +557,8 @@ void dynamicDidFailToRegisterForRemoteNotificationsWithError(id self, SEL _cmd, 
 	}
 
 	NSLog(@"Error registering for push notifications. Error: %@", error);
+	
+	[[PushNotificationManager pushManager] handlePushRegistrationFailure:error];
 }
 
 void dynamicDidReceiveRemoteNotification(id self, SEL _cmd, id application, id userInfo) {

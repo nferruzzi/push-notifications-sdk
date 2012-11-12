@@ -25,14 +25,14 @@
     // Override point for customization after application launch.
     self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController" bundle:nil] autorelease];
 	
-	navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
-	[navController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
-	self.window.rootViewController = navController;
+//	navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+//	[navController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
+	self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
 
-	//You can set custom delegate or custom orientations for Rich Pushes
-//	PushNotificationManager * pushManager = [PushNotificationManager pushManager];
-//	pushManager.delegate = self;
+	//set custom delegate for push handlinh
+	PushNotificationManager * pushManager = [PushNotificationManager pushManager];
+	pushManager.delegate = self.viewController;
 //	pushManager.supportedOrientations = PWOrientationPortrait | PWOrientationLandscapeLeft | PWOrientationLandscapeRight;
 	
     return YES;
@@ -47,19 +47,6 @@
 		[alert release];
 	}
 }
-
-/*
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
-	NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken");
-}
-
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
-	NSLog(@"didFailToRegisterForRemoteNotificationsWithError");
-}
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-	NSLog(@"didReceiveRemoteNotification");
-}
- */
 
 - (void)dealloc
 {

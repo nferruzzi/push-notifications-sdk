@@ -472,6 +472,9 @@
 }
 
 - (void) sendBadgesBackground: (NSNumber *) badge {
+	if([[PushNotificationManager pushManager] getPushToken] == nil)
+		return;
+	
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	PWSendBadgeRequest *request = [[PWSendBadgeRequest alloc] init];

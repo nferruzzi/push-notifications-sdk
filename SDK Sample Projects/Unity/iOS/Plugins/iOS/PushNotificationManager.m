@@ -472,6 +472,9 @@
 }
 
 - (void) sendBadgesBackground: (NSNumber *) badge {
+	if([[PushNotificationManager pushManager] getPushToken] == nil)
+		return;
+	
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	PWSendBadgeRequest *request = [[PWSendBadgeRequest alloc] init];
@@ -513,6 +516,9 @@ void * _getPushToken()
 	return (void *)[[[PushNotificationManager pushManager] getPushToken] UTF8String];
 }
 
+char * g_tokenStr = 0;
+char * g_registerErrStr = 0;
+char * g_pushMessageStr = 0;
 char * g_listenerName = 0;
 void setListenerName(char * listenerName)
 {
@@ -520,6 +526,21 @@ void setListenerName(char * listenerName)
 	int len = strlen(listenerName);
 	g_listenerName = malloc(len+1);
 	strcpy(g_listenerName, listenerName);
+
+	if(g_tokenStr) {
+		UnitySendMessage(g_listenerName, "onRegisteredForPushNotifications", g_tokenStr);
+		free(g_tokenStr); g_tokenStr = 0;
+	}
+
+	if(g_registerErrStr) {
+		UnitySendMessage(g_listenerName, "onFailedToRegisteredForPushNotifications", g_registerErrStr);
+		free(g_registerErrStr); g_registerErrStr = 0;
+	}
+
+	if(g_pushMessageStr) {
+		UnitySendMessage(g_listenerName, "onPushNotificationsReceived", g_pushMessageStr);
+		free(g_pushMessageStr); g_pushMessageStr = 0;
+	}
 }
 
 void setIntTag(char * tagName, int tagValue)
@@ -549,29 +570,32 @@ void setStringTag(char * tagName, char * tagValue)
 //succesfully registered for push notifications
 - (void) onDidRegisterForRemoteNotificationsWithDeviceToken:(NSString *)token
 {
-	if(!g_listenerName)
-		return;
-	
 	const char * str = [token UTF8String];
+	if(!g_listenerName) {
+		g_tokenStr = malloc(strlen(str)+1);
+		strcpy(g_tokenStr, str);
+		return;
+	}
+
 	UnitySendMessage(g_listenerName, "onRegisteredForPushNotifications", str);
 }
 
 //failed to register for push notifications
 - (void) onDidFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-	if(!g_listenerName)
-		return;
-	
 	const char * str = [[error description] UTF8String];
+	if(!g_listenerName) {
+		g_registerErrStr = malloc(strlen(str)+1);
+		strcpy(g_registerErrStr, str);
+		return;
+	}
+
 	UnitySendMessage(g_listenerName, "onFailedToRegisteredForPushNotifications", str);
 }
 
 //handle push notification, display alert, if this method is implemented onPushAccepted will not be called, internal message boxes will not be displayed
 - (void) onPushReceived:(PushNotificationManager *)pushManager withNotification:(NSDictionary *)pushNotification onStart:(BOOL)onStart
 {
-	if(!g_listenerName)
-		return;
-	
 	NSMutableArray *requestStringBuilder = [NSMutableArray new];
 	
 	for (NSString *key in [pushNotification allKeys]) {
@@ -582,6 +606,13 @@ void setStringTag(char * tagName, char * tagValue)
 	[requestStringBuilder release];
 
 	const char * str = [jsonRequestData UTF8String];
+	
+	if(!g_listenerName) {
+		g_pushMessageStr = malloc(strlen(str)+1);
+		strcpy(g_pushMessageStr, str);
+		return;
+	}
+
 	UnitySendMessage(g_listenerName, "onPushNotificationsReceived", str);
 }
 

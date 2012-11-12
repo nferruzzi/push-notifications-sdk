@@ -13,7 +13,7 @@
 @end
 
 @implementation ViewController
-@synthesize deviceIdField, userIdField;
+@synthesize aliasField, favNumField, statusLabel;
 
 - (void) initializeLocationManager {
 	if (locationManager) {
@@ -50,10 +50,10 @@
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
-	if (textField == deviceIdField) {
-		[userIdField becomeFirstResponder];
-	} else if (textField == userIdField) {
-		[self submitAction:userIdField];
+	if (textField == aliasField) {
+		[favNumField becomeFirstResponder];
+	} else if (textField == favNumField) {
+		[self submitAction:favNumField];
 	}
 	
 	return YES;
@@ -63,21 +63,21 @@
 	[super viewDidLoad];
 	
 	[self initializeLocationManager];
-	[self startTracking];
+//	[self startTracking];
 }
 
 - (void) submitAction:(id)sender {
 	NSLog(@"Submitting");
-	[deviceIdField resignFirstResponder];
-	[userIdField resignFirstResponder];
+	[aliasField resignFirstResponder];
+	[favNumField resignFirstResponder];
 	
 	NSDictionary *tags = [NSDictionary dictionaryWithObjectsAndKeys:
-						  [deviceIdField text], @"deviceId", 
-						  [NSNumber numberWithInt:[userIdField.text intValue]], @"testInt",
-//						  [NSArray arrayWithObjects:@"one", @"two", @"three", nil], @"array",
+						  [aliasField text], @"Alias",
+						  [NSNumber numberWithInt:[favNumField.text intValue]], @"FavNumber",
 						  nil];
 	
 	[[PushNotificationManager pushManager] setTags:tags];
+	statusLabel.text = @"Tags sent";
 }
 
 
@@ -89,10 +89,27 @@
 	}
 }
 
+//succesfully registered for push notifications
+- (void) onDidRegisterForRemoteNotificationsWithDeviceToken:(NSString *)token {
+	statusLabel.text = [NSString stringWithFormat:@"Registered with push token: %@", token];
+}
+
+//failed to register for push notifications
+- (void) onDidFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+	statusLabel.text = [NSString stringWithFormat:@"Failed to register: %@", [error description]];
+}
+
+//user pressed OK on the push notification
+- (void) onPushAccepted:(PushNotificationManager *)pushManager withNotification:(NSDictionary *)pushNotification {
+	statusLabel.text = [NSString stringWithFormat:@"Received push notification: %@", pushNotification];
+}
+
 
 - (void) dealloc {
-	self.deviceIdField = nil;
-	self.userIdField = nil;
+	self.aliasField = nil;
+	self.favNumField = nil;
+	self.statusLabel = nil;
+
 	[super dealloc];
 }
 @end
