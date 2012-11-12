@@ -27,7 +27,7 @@
 @implementation PushNotificationManager
 
 @synthesize appCode, appName, navController, pushNotifications, delegate;
-@synthesize supportedOrientations;
+@synthesize supportedOrientations, showPushnotificationAlert;
 
 - (NSString *) stringFromMD5: (NSString *)val{
     
@@ -129,6 +129,7 @@
 		self.navController = [UIApplication sharedApplication].keyWindow.rootViewController;
 		internalIndex = 0;
 		pushNotifications = [[NSMutableDictionary alloc] init];
+		showPushnotificationAlert = TRUE;
 		
 		[[NSUserDefaults standardUserDefaults] setObject:_appCode forKey:@"Pushwoosh_APPID"];
 		if(_appName) {
@@ -147,6 +148,7 @@
 		self.appName = _appName;
 		internalIndex = 0;
 		pushNotifications = [[NSMutableDictionary alloc] init];
+		showPushnotificationAlert = TRUE;
 		
 		[[NSUserDefaults standardUserDefaults] setObject:_appCode forKey:@"Pushwoosh_APPID"];
 		if(_appName) {
@@ -345,6 +347,10 @@
 	if([delegate respondsToSelector:@selector(onPushAccepted: withNotification:)] ) {
 		[delegate onPushAccepted:self withNotification:lastPushDict];
 	}
+	else
+	if([delegate respondsToSelector:@selector(onPushAccepted: withNotification: onStart:)] ) {
+		[delegate onPushAccepted:self withNotification:lastPushDict onStart:NO];
+	}
 	
 	[pushNotifications removeObjectForKey:[NSNumber numberWithInt:alertView.tag]];
 }
@@ -385,7 +391,7 @@
 	NSString *linkUrl = [userInfo objectForKey:@"l"];
 	
 	//the app is running, display alert only
-	if(!isPushOnStart) {
+	if(!isPushOnStart && showPushnotificationAlert) {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.appName message:alertMsg delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
 		alert.tag = ++internalIndex;
 		[pushNotifications setObject:userInfo forKey:[NSNumber numberWithInt:internalIndex]];
@@ -405,6 +411,11 @@
 	if([delegate respondsToSelector:@selector(onPushAccepted: withNotification:)] ) {
 		[delegate onPushAccepted:self withNotification:userInfo];
 	}
+	else
+	if([delegate respondsToSelector:@selector(onPushAccepted: withNotification: onStart:)] ) {
+		[delegate onPushAccepted:self withNotification:userInfo onStart:isPushOnStart];
+	}
+
 	return YES;
 }
 
