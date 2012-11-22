@@ -161,7 +161,8 @@ function initPushwoosh()
 {
 	var pushNotification = window.plugins.pushNotification;
 	
-	pushNotification.registerDevice({ projectid: "GOOGLE_PROJECT_ID", appid : "PUSHWOOSH_APP_ID" },
+	//projectid: "GOOGLE_PROJECT_ID", appid : "PUSHWOOSH_APP_ID"
+	pushNotification.registerDevice({ projectid: "60756016005", appid : "4F0C807E51EC77.93591449" },
 									function(status) {
 										var pushToken = status;
 										console.warn('push token: ' + pushToken);

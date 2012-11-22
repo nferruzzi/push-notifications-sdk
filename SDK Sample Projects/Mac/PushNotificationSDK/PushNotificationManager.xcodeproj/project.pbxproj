@@ -17,6 +17,8 @@
 		500B662715DD5D43002B2233 /* PWRegisterDeviceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B662515DD5D43002B2233 /* PWRegisterDeviceRequest.m */; };
 		500B662A15DD5FE3002B2233 /* PWPushStatRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 500B662815DD5FE3002B2233 /* PWPushStatRequest.h */; };
 		500B662B15DD5FE3002B2233 /* PWPushStatRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 500B662915DD5FE3002B2233 /* PWPushStatRequest.m */; };
+		50B7292B165D5B3900525F8B /* PWAppOpenRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B72929165D5B3900525F8B /* PWAppOpenRequest.m */; };
+		50B7292C165D5B3900525F8B /* PWAppOpenRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 50B7292A165D5B3900525F8B /* PWAppOpenRequest.h */; };
 		ABB6AF7414D2AED300D0A064 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABB6AF7314D2AED300D0A064 /* Cocoa.framework */; };
 		ABB6AF7E14D2AED300D0A064 /* PushNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB6AF7D14D2AED300D0A064 /* PushNotificationManager.m */; };
 /* End PBXBuildFile section */
@@ -32,6 +34,8 @@
 		500B662515DD5D43002B2233 /* PWRegisterDeviceRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWRegisterDeviceRequest.m; sourceTree = "<group>"; };
 		500B662815DD5FE3002B2233 /* PWPushStatRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWPushStatRequest.h; sourceTree = "<group>"; };
 		500B662915DD5FE3002B2233 /* PWPushStatRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWPushStatRequest.m; sourceTree = "<group>"; };
+		50B72929165D5B3900525F8B /* PWAppOpenRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWAppOpenRequest.m; sourceTree = "<group>"; };
+		50B7292A165D5B3900525F8B /* PWAppOpenRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWAppOpenRequest.h; sourceTree = "<group>"; };
 		ABB6AF7014D2AED300D0A064 /* libPushNotificationManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPushNotificationManager.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABB6AF7314D2AED300D0A064 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		ABB6AF7614D2AED300D0A064 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -91,6 +95,8 @@
 		ABB6AF7914D2AED300D0A064 /* PushNotificationManager */ = {
 			isa = PBXGroup;
 			children = (
+				50B72929165D5B3900525F8B /* PWAppOpenRequest.m */,
+				50B7292A165D5B3900525F8B /* PWAppOpenRequest.h */,
 				500B662815DD5FE3002B2233 /* PWPushStatRequest.h */,
 				500B662915DD5FE3002B2233 /* PWPushStatRequest.m */,
 				500B662415DD5D43002B2233 /* PWRegisterDeviceRequest.h */,
@@ -128,6 +134,7 @@
 				500B662215DD5BBA002B2233 /* PWRequestManager.h in Headers */,
 				500B662615DD5D43002B2233 /* PWRegisterDeviceRequest.h in Headers */,
 				500B662A15DD5FE3002B2233 /* PWPushStatRequest.h in Headers */,
+				50B7292C165D5B3900525F8B /* PWAppOpenRequest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,6 +195,7 @@
 				500B662315DD5BBA002B2233 /* PWRequestManager.m in Sources */,
 				500B662715DD5D43002B2233 /* PWRegisterDeviceRequest.m in Sources */,
 				500B662B15DD5FE3002B2233 /* PWPushStatRequest.m in Sources */,
+				50B7292B165D5B3900525F8B /* PWAppOpenRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

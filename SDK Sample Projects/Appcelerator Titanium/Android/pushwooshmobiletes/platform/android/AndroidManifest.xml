@@ -46,6 +46,7 @@
 
 		<activity android:name=".PushwooshmobiletesActivity"
 			android:label="pushwooshmobiletes" android:theme="@style/Theme.Titanium"
+			android:launchMode="singleTop"
 			android:configChanges="keyboardHidden|orientation">
             <intent-filter>
                 <action android:name="com.pushwoosh.test.MESSAGE"/>

@@ -45,7 +45,22 @@
 
 #pragma mark - View lifecycle
 
-- (void) viewDidLoad
+- (void)viewWillAppear:(BOOL)animated
+{
+    // Set the main view to utilize the entire application frame space of the device.
+    // Change this to suit your view's UI footprint needs in your application.
+
+    UIView* rootView = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
+    CGRect webViewFrame = [[[rootView subviews] objectAtIndex:0] frame];  // first subview is the UIWebView
+
+    if (CGRectEqualToRect(webViewFrame, CGRectZero)) { // UIWebView is sized according to its parent, here it hasn't been sized yet
+        self.view.frame = [[UIScreen mainScreen] applicationFrame]; // size UIWebView's parent according to application frame, which will in turn resize the UIWebView
+    }
+
+    [super viewWillAppear:animated];
+}
+
+- (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -105,15 +120,15 @@
      if (self.invokeString)
      {
         // this is passed before the deviceready event is fired, so you can access it in js when you receive deviceready
-		NSLog(@"DEPRECATED: window.invokeString - use the window.handleOpenURL(url) function instead, which is always called when the app is launched through a custom scheme url.");
+        NSLog(@"DEPRECATED: window.invokeString - use the window.handleOpenURL(url) function instead, which is always called when the app is launched through a custom scheme url.");
         NSString* jsString = [NSString stringWithFormat:@"var invokeString = \"%@\";", self.invokeString];
         [theWebView stringByEvaluatingJavaScriptFromString:jsString];
-     }
-     
-     // Black base color for background matches the native apps
-     theWebView.backgroundColor = [UIColor blackColor];
+    }
 
-	return [super webViewDidFinishLoad:theWebView];
+    // Black base color for background matches the native apps
+    theWebView.backgroundColor = [UIColor blackColor];
+
+    return [super webViewDidFinishLoad:theWebView];
 }
 
 /* Comment out the block below to over-ride */

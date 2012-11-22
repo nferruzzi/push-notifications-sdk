@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
-	<property name="ti.android.fastdev" type="bool">false</property>
+    <property name="ti.android.fastdev" type="bool">false</property>
     <property name="ti.android.runtime">rhino</property>
     <property name="acs-oauth-secret-production" type="string">LLzNyp2hnXUwsVRKOOBUOoOUMhriyveh</property>
     <property name="acs-oauth-key-production" type="string">HEkeg8EFrfkpvlSqlhuL8zKuG93qubs6</property>
@@ -54,6 +54,6 @@
         <theme>default</theme>
     </mobileweb>
     <modules>
-        <module platform="android" version="0.1">com.arellomobie.push</module>
+        <module platform="android" version="1.0">com.arellomobie.push</module>
     </modules>
 </ti:app>

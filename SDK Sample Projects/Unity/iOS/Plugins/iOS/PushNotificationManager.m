@@ -11,6 +11,7 @@
 #import "PWRegisterDeviceRequest.h"
 #import "PWSetTagsRequest.h"
 #import "PWSendBadgeRequest.h"
+#import "PWAppOpenRequest.h"
 #import "PWPushStatRequest.h"
 #import "PWGetNearestZoneRequest.h"
 
@@ -20,14 +21,12 @@
 #include <net/if_dl.h>
 #import <CommonCrypto/CommonDigest.h>
 
-#define kServicePushNotificationUrl @"https://cp.pushwoosh.com/json/1.3/registerDevice"
-#define kServiceSetTagsUrl @"https://cp.pushwoosh.com/json/1.3/setTags"
-#define kServiceHtmlContentFormatUrl @"https://cp.pushwoosh.com/content/%@"
+#define kServiceHtmlContentFormatUrl @"http://cp.pushwoosh.com/content/%@"
 
 @implementation PushNotificationManager
 
 @synthesize appCode, appName, navController, pushNotifications, delegate;
-@synthesize supportedOrientations;
+@synthesize supportedOrientations, showPushnotificationAlert;
 
 - (NSString *) stringFromMD5: (NSString *)val{
     
@@ -129,6 +128,7 @@
 		self.navController = [UIApplication sharedApplication].keyWindow.rootViewController;
 		internalIndex = 0;
 		pushNotifications = [[NSMutableDictionary alloc] init];
+		showPushnotificationAlert = TRUE;
 		
 		[[NSUserDefaults standardUserDefaults] setObject:_appCode forKey:@"Pushwoosh_APPID"];
 		if(_appName) {
@@ -147,6 +147,7 @@
 		self.appName = _appName;
 		internalIndex = 0;
 		pushNotifications = [[NSMutableDictionary alloc] init];
+		showPushnotificationAlert = TRUE;
 		
 		[[NSUserDefaults standardUserDefaults] setObject:_appCode forKey:@"Pushwoosh_APPID"];
 		if(_appName) {
@@ -279,6 +280,12 @@
 	[self performSelectorInBackground:@selector(sendDevTokenToServer:) withObject:deviceID];
 }
 
+- (void) handlePushRegistrationFailure:(NSError *) error {
+	if([delegate respondsToSelector:@selector(onDidFailToRegisterForRemoteNotificationsWithError:)] ) {
+		[delegate performSelectorOnMainThread:@selector(onDidFailToRegisterForRemoteNotificationsWithError:) withObject:error waitUntilDone:NO];
+	}
+}
+
 - (NSString *) getPushToken {
 	return [[NSUserDefaults standardUserDefaults] objectForKey:@"PWPushUserId"];
 }
@@ -339,6 +346,10 @@
 	if([delegate respondsToSelector:@selector(onPushAccepted: withNotification:)] ) {
 		[delegate onPushAccepted:self withNotification:lastPushDict];
 	}
+	else
+	if([delegate respondsToSelector:@selector(onPushAccepted: withNotification: onStart:)] ) {
+		[delegate onPushAccepted:self withNotification:lastPushDict onStart:NO];
+	}
 	
 	[pushNotifications removeObjectForKey:[NSNumber numberWithInt:alertView.tag]];
 }
@@ -364,7 +375,9 @@
 		isPushOnStart = YES;
 	}
 	
-	[self performSelectorInBackground:@selector(sendStatsBackground) withObject:nil];
+	NSString *hash = [userInfo objectForKey:@"p"];
+	
+	[self performSelectorInBackground:@selector(sendStatsBackground:) withObject:hash];
 	
 	if([delegate respondsToSelector:@selector(onPushReceived: withNotification: onStart:)] ) {
 		[delegate onPushReceived:self withNotification:userInfo onStart:isPushOnStart];
@@ -379,7 +392,7 @@
 	NSString *linkUrl = [userInfo objectForKey:@"l"];
 	
 	//the app is running, display alert only
-	if(!isPushOnStart) {
+	if(!isPushOnStart && showPushnotificationAlert) {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.appName message:alertMsg delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
 		alert.tag = ++internalIndex;
 		[pushNotifications setObject:userInfo forKey:[NSNumber numberWithInt:internalIndex]];
@@ -399,6 +412,11 @@
 	if([delegate respondsToSelector:@selector(onPushAccepted: withNotification:)] ) {
 		[delegate onPushAccepted:self withNotification:userInfo];
 	}
+	else
+	if([delegate respondsToSelector:@selector(onPushAccepted: withNotification: onStart:)] ) {
+		[delegate onPushAccepted:self withNotification:userInfo onStart:isPushOnStart];
+	}
+
 	return YES;
 }
 
@@ -410,11 +428,12 @@
 	return [pushNotification objectForKey:@"u"];
 }
 
-- (void) sendStatsBackground {
+- (void) sendStatsBackground:(NSString *)hash {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	PWPushStatRequest *request = [[PWPushStatRequest alloc] init];
 	request.appId = appCode;
+	request.hash = hash;
 	request.hwid = [self uniqueGlobalDeviceIdentifier];
 	
 	if ([[PWRequestManager sharedManager] sendRequest:request]) {
@@ -471,6 +490,24 @@
 	[pool release]; pool = nil;
 }
 
+- (void) sendAppOpenBackground {
+	//it's ok to call this method without push token
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	PWAppOpenRequest *request = [[PWAppOpenRequest alloc] init];
+	request.appId = appCode;
+	request.hwid = [self uniqueGlobalDeviceIdentifier];
+	
+	if ([[PWRequestManager sharedManager] sendRequest:request]) {
+		NSLog(@"sending appOpen completed");
+	} else {
+		NSLog(@"sending appOpen failed");
+	}
+	
+	[request release]; request = nil;
+	[pool release]; pool = nil;
+}
+
 - (void) sendBadgesBackground: (NSNumber *) badge {
 	if([[PushNotificationManager pushManager] getPushToken] == nil)
 		return;
@@ -494,6 +531,10 @@
 
 - (void) sendBadges: (NSInteger) badge {
 	[self performSelectorInBackground:@selector(sendBadgesBackground:) withObject:[NSNumber numberWithInt:badge]];
+}
+
+- (void) sendAppOpen {
+	[self performSelectorInBackground:@selector(sendAppOpenBackground) withObject:nil];
 }
 
 - (void) setTags: (NSDictionary *) tags {
@@ -635,6 +676,8 @@ BOOL dynamicDidFinishLaunching(id self, SEL _cmd, id application, id launchOptio
 	[[PushNotificationManager pushManager] handlePushReceived:launchOptions];
 	[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 	
+	[[PushNotificationManager pushManager] sendAppOpen];
+	
 	return result;
 }
 
@@ -652,6 +695,8 @@ void dynamicDidFailToRegisterForRemoteNotificationsWithError(id self, SEL _cmd, 
 	}
 
 	NSLog(@"Error registering for push notifications. Error: %@", error);
+	
+	[[PushNotificationManager pushManager] handlePushRegistrationFailure:error];
 }
 
 void dynamicDidReceiveRemoteNotification(id self, SEL _cmd, id application, id userInfo) {

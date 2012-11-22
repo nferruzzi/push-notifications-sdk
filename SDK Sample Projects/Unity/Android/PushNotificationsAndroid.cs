@@ -33,6 +33,11 @@ public class PushNotificationsAndroid : MonoBehaviour {
 		pushwoosh.Call("setIntTag", tagName, tagValue);
 	}
 
+	public void unregisterDevice()
+	{
+		pushwoosh.Call("unregisterFromPushNotifications");
+	}
+
 	public void setStringTag(string tagName, string tagValue)
 	{
 		pushwoosh.Call("setStringTag", tagName, tagValue);

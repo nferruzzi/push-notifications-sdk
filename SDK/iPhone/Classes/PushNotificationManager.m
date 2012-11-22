@@ -11,6 +11,7 @@
 #import "PWRegisterDeviceRequest.h"
 #import "PWSetTagsRequest.h"
 #import "PWSendBadgeRequest.h"
+#import "PWAppOpenRequest.h"
 #import "PWPushStatRequest.h"
 #import "PWGetNearestZoneRequest.h"
 
@@ -20,9 +21,7 @@
 #include <net/if_dl.h>
 #import <CommonCrypto/CommonDigest.h>
 
-#define kServicePushNotificationUrl @"https://cp.pushwoosh.com/json/1.3/registerDevice"
-#define kServiceSetTagsUrl @"https://cp.pushwoosh.com/json/1.3/setTags"
-#define kServiceHtmlContentFormatUrl @"https://cp.pushwoosh.com/content/%@"
+#define kServiceHtmlContentFormatUrl @"http://cp.pushwoosh.com/content/%@"
 
 @implementation PushNotificationManager
 
@@ -376,7 +375,9 @@
 		isPushOnStart = YES;
 	}
 	
-	[self performSelectorInBackground:@selector(sendStatsBackground) withObject:nil];
+	NSString *hash = [userInfo objectForKey:@"p"];
+	
+	[self performSelectorInBackground:@selector(sendStatsBackground:) withObject:hash];
 	
 	if([delegate respondsToSelector:@selector(onPushReceived: withNotification: onStart:)] ) {
 		[delegate onPushReceived:self withNotification:userInfo onStart:isPushOnStart];
@@ -427,11 +428,12 @@
 	return [pushNotification objectForKey:@"u"];
 }
 
-- (void) sendStatsBackground {
+- (void) sendStatsBackground:(NSString *)hash {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	PWPushStatRequest *request = [[PWPushStatRequest alloc] init];
 	request.appId = appCode;
+	request.hash = hash;
 	request.hwid = [self uniqueGlobalDeviceIdentifier];
 	
 	if ([[PWRequestManager sharedManager] sendRequest:request]) {
@@ -488,6 +490,24 @@
 	[pool release]; pool = nil;
 }
 
+- (void) sendAppOpenBackground {
+	//it's ok to call this method without push token
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	PWAppOpenRequest *request = [[PWAppOpenRequest alloc] init];
+	request.appId = appCode;
+	request.hwid = [self uniqueGlobalDeviceIdentifier];
+	
+	if ([[PWRequestManager sharedManager] sendRequest:request]) {
+		NSLog(@"sending appOpen completed");
+	} else {
+		NSLog(@"sending appOpen failed");
+	}
+	
+	[request release]; request = nil;
+	[pool release]; pool = nil;
+}
+
 - (void) sendBadgesBackground: (NSNumber *) badge {
 	if([[PushNotificationManager pushManager] getPushToken] == nil)
 		return;
@@ -511,6 +531,10 @@
 
 - (void) sendBadges: (NSInteger) badge {
 	[self performSelectorInBackground:@selector(sendBadgesBackground:) withObject:[NSNumber numberWithInt:badge]];
+}
+
+- (void) sendAppOpen {
+	[self performSelectorInBackground:@selector(sendAppOpenBackground) withObject:nil];
 }
 
 - (void) setTags: (NSDictionary *) tags {
@@ -550,6 +574,8 @@ BOOL dynamicDidFinishLaunching(id self, SEL _cmd, id application, id launchOptio
 	
 	[[PushNotificationManager pushManager] handlePushReceived:launchOptions];
 	[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+	
+	[[PushNotificationManager pushManager] sendAppOpen];
 	
 	return result;
 }

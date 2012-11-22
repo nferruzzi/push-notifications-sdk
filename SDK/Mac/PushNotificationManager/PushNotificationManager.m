@@ -10,11 +10,10 @@
 #import "PWRequestManager.h"
 #import "PWRegisterDeviceRequest.h"
 #import "PWSetTagsRequest.h"
+#import "PWAppOpenRequest.h"
 #import "PWPushStatRequest.h"
 
-#define kServicePushNotificationUrl @"https://cp.pushwoosh.com/json/1.3/registerDevice"
-#define kServiceSetTagsUrl @"https://cp.pushwoosh.com/json/1.3/setTags"
-#define kServiceHtmlContentFormatUrl @"https://cp.pushwoosh.com/content/%@"
+#define kServiceHtmlContentFormatUrl @"http://cp.pushwoosh.com/content/%@"
 
 @implementation PushNotificationManager
 
@@ -100,7 +99,7 @@ static NSString * GetMACAddressDisplayString()
 	return self;
 }
 
-+ (void)initializeAppCode:(NSString *)appCode appName:(NSString *)appName {
++ (void)initializeWithAppCode:(NSString *)appCode appName:(NSString *)appName {
 	[[NSUserDefaults standardUserDefaults] setObject:appCode forKey:@"Pushwoosh_APPID"];
 	
 	if(appName) {
@@ -112,10 +111,10 @@ static NSString * GetMACAddressDisplayString()
 	static PushNotificationManager * instance = nil;
 	
 	if(instance == nil) {
-		NSString * appid = [[NSUserDefaults standardUserDefaults] objectForKey:@"Pushwoosh_APPID"];
+		NSString * appid = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"Pushwoosh_APPID"];
 		
 		if(!appid) {
-			appid = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"Pushwoosh_APPID"];
+			appid = [[NSUserDefaults standardUserDefaults] objectForKey:@"Pushwoosh_APPID"];
 
 			if(!appid) {
 				return nil;
@@ -144,7 +143,7 @@ static NSString * GetMACAddressDisplayString()
 
 - (void) sendDevTokenToServer:(NSString *)deviceID {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
+    
 	NSString * appLocale = @"en";
 	NSLocale * locale = (NSLocale *)CFLocaleCopyCurrent();
 	NSString * localeId = [locale localeIdentifier];
@@ -164,7 +163,7 @@ static NSString * GetMACAddressDisplayString()
 		if([value length] > 2)
 			value = [value stringByReplacingCharactersInRange:NSMakeRange(2, [value length]-2) withString:@""];
 		
-		appLocale = value;
+		appLocale = [[value copy] autorelease];
 	}
 	
 	[languagesArr release]; languagesArr = nil;
@@ -176,10 +175,19 @@ static NSString * GetMACAddressDisplayString()
 	request.language = appLocale;
 	request.timeZone = [NSString stringWithFormat:@"%ld", [[NSTimeZone localTimeZone] secondsFromGMT]];
 	
-	if ([[PWRequestManager sharedManager] sendRequest:request]) {
+	NSError *error = nil;
+	if ([[PWRequestManager sharedManager] sendRequest:request error:&error]) {
 		NSLog(@"Registered for push notifications: %@", deviceID);
+
+		if([delegate respondsToSelector:@selector(onDidRegisterForRemoteNotificationsWithDeviceToken:)] ) {
+			[delegate performSelectorOnMainThread:@selector(onDidRegisterForRemoteNotificationsWithDeviceToken:) withObject:[self getPushToken] waitUntilDone:NO];
+		}
 	} else {
 		NSLog(@"Registered for push notifications failed");
+
+		if([delegate respondsToSelector:@selector(onDidFailToRegisterForRemoteNotificationsWithError:)] ) {
+			[delegate performSelectorOnMainThread:@selector(onDidFailToRegisterForRemoteNotificationsWithError:) withObject:error waitUntilDone:NO];
+		}
 	}
 	
 	[request release]; request = nil;
@@ -197,6 +205,12 @@ static NSString * GetMACAddressDisplayString()
 	[[NSUserDefaults standardUserDefaults] setObject:deviceID forKey:@"PWPushUserId"];
 	
 	[self performSelectorInBackground:@selector(sendDevTokenToServer:) withObject:deviceID];
+}
+
+- (void) handlePushRegistrationFailure:(NSError *) error {
+	if([delegate respondsToSelector:@selector(onDidFailToRegisterForRemoteNotificationsWithError:)] ) {
+		[delegate performSelectorOnMainThread:@selector(onDidFailToRegisterForRemoteNotificationsWithError:) withObject:error waitUntilDone:NO];
+	}
 }
 
 - (NSString *) getPushToken {
@@ -222,9 +236,11 @@ static NSString * GetMACAddressDisplayString()
 	//on mac only active application can receive push notification at this time
 	isPushOnStart = NO;
 	
-	[self performSelectorInBackground:@selector(sendStatsBackground) withObject:nil];
+	NSString *hash = [userInfo objectForKey:@"p"];
 	
-	if([delegate respondsToSelector:@selector(onPushReceived: onStart:)] ) {
+	[self performSelectorInBackground:@selector(sendStatsBackground:) withObject:hash];
+	
+	if([delegate respondsToSelector:@selector(onPushReceived: withNotification: onStart:)] ) {
 		[delegate onPushReceived:self withNotification:userInfo onStart:isPushOnStart];
 		return YES;
 	}
@@ -256,7 +272,11 @@ static NSString * GetMACAddressDisplayString()
 	if([delegate respondsToSelector:@selector(onPushAccepted: withNotification:)] ) {
 		[delegate onPushAccepted:self withNotification:userInfo];
 	}
-	
+	else
+	if([delegate respondsToSelector:@selector(onPushAccepted: withNotification: onStart:)] ) {
+		[delegate onPushAccepted:self withNotification:userInfo onStart:isPushOnStart];
+	}
+
 	return YES;
 }
 
@@ -268,11 +288,12 @@ static NSString * GetMACAddressDisplayString()
 	return [pushNotification objectForKey:@"u"];
 }
 
-- (void) sendStatsBackground {
+- (void) sendStatsBackground:(NSString *)hash {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	PWPushStatRequest *request = [[PWPushStatRequest alloc] init];
 	request.appId = appCode;
+	request.hash = hash;
 	request.hwid = GetMACAddressDisplayString();
 
 	if ([[PWRequestManager sharedManager] sendRequest:request]) {
@@ -305,6 +326,28 @@ static NSString * GetMACAddressDisplayString()
 	[pool release]; pool = nil;
 }
 
+- (void) sendAppOpenBackground {
+	//it's ok to call this method without push token
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	PWAppOpenRequest *request = [[PWAppOpenRequest alloc] init];
+	request.appId = appCode;
+	request.hwid = GetMACAddressDisplayString();
+	
+	if ([[PWRequestManager sharedManager] sendRequest:request]) {
+		NSLog(@"sending appOpen completed");
+	} else {
+		NSLog(@"sending appOpen failed");
+	}
+	
+	[request release]; request = nil;
+	[pool release]; pool = nil;
+}
+
+- (void) sendAppOpen {
+	[self performSelectorInBackground:@selector(sendAppOpenBackground) withObject:nil];
+}
+
 - (void) setTags: (NSDictionary *) tags {
 	[self performSelectorInBackground:@selector(sendTagsBackground:) withObject:tags];
 }
@@ -323,7 +366,12 @@ static NSString * GetMACAddressDisplayString()
 
 @implementation NSApplication(Pushwoosh)
 
-BOOL dynamicDidFinishLaunching(id self, SEL _cmd, id aNotification) {
+void dynamicDidFinishLaunching(id self, SEL _cmd, id aNotification);
+void dynamicDidRegisterForRemoteNotificationsWithDeviceToken(id self, SEL _cmd, id application, id devToken);
+void dynamicDidFailToRegisterForRemoteNotificationsWithError(id self, SEL _cmd, id application, id error);
+void dynamicDidReceiveRemoteNotification(id self, SEL _cmd, id application, id userInfo);
+
+void dynamicDidFinishLaunching(id self, SEL _cmd, id aNotification) {
 	if ([self respondsToSelector:@selector(pw_applicationDidFinishLaunching:)]) {
 		[self pw_applicationDidFinishLaunching:aNotification];
 	}
@@ -335,6 +383,7 @@ BOOL dynamicDidFinishLaunching(id self, SEL _cmd, id aNotification) {
 	}
 	
 	[[PushNotificationManager pushManager] handlePushReceived:[aNotification userInfo]];
+	[[PushNotificationManager pushManager] sendAppOpen];
 }
 
 void dynamicDidRegisterForRemoteNotificationsWithDeviceToken(id self, SEL _cmd, id application, id devToken) {
@@ -351,6 +400,8 @@ void dynamicDidFailToRegisterForRemoteNotificationsWithError(id self, SEL _cmd, 
 	}
 
 	NSLog(@"Error registering for push notifications. Error: %@", error);
+	
+	[[PushNotificationManager pushManager] handlePushRegistrationFailure:error];
 }
 
 void dynamicDidReceiveRemoteNotification(id self, SEL _cmd, id application, id userInfo) {

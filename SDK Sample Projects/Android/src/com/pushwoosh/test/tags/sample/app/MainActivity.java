@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.arellomobile.android.push.PushManager;
+import com.arellomobile.android.push.utils.NetworkUtils;
 
 public class MainActivity extends FragmentActivity implements SendTagsCallBack
 {
@@ -32,9 +33,10 @@ public class MainActivity extends FragmentActivity implements SendTagsCallBack
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
+		
+		//NetworkUtils.useSSL = true;
 
 		PushManager pushManager = new PushManager(this, APP_ID, SENDER_ID);
-
 		pushManager.onStartup(this);
 
 		mGeneralStatus = (TextView) findViewById(R.id.general_status);

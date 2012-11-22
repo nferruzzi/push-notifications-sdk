@@ -24,7 +24,7 @@ const QString http_proxy = "";
 const int proxy_port = 8080;
 
 const QString APP_CODE = "YOUR_APP_CODE";
-const QString POST_URL = "https://cp.pushwoosh.com/json/1.2/registerDevice";
+const QString POST_URL = "https://cp.pushwoosh.com/json/1.3/registerDevice";
 
 NotificationsManager::NotificationsManager(const QString & application_id, const QString & service_id)
 :	iNotificationSession(0),
@@ -138,7 +138,7 @@ void NotificationsManager::notificationInfo(QObject* aData)
 
 	//post the notification to the server
 	QByteArray dataArray = QUrl::toPercentEncoding( iNotificationId );
-	QString post_data = "{\"request\":{\"application\":\"" + APP_CODE + "\", \"language\":\"" + QLocale::system().name().left(2) + "\", \"device_type\":\"4\", \"device_id\":\"" + dataArray + "\", \"hw_id\":\"" + QSystemDeviceInfo().imei() + "\"}}";
+    QString post_data = "{\"request\":{\"application\":\"" + APP_CODE + "\", \"language\":\"" + QLocale::system().name().left(2) + "\", \"device_type\":\"4\", \"push_token\":\"" + dataArray + "\", \"hwid\":\"" + QSystemDeviceInfo().imei() + "\"}}";
 
 	QUrl qUrl(POST_URL);
 	iHttpManager->post(QNetworkRequest(qUrl), post_data.toLatin1());

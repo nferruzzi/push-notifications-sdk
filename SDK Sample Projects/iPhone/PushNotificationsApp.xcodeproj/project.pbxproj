@@ -317,7 +317,7 @@
 				HEADER_SEARCH_PATHS = ./PushNotificationManager/Classes;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				OTHER_LDFLAGS = "-ObjC";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F9C1F9CD-4DBA-4DB3-AABA-39714C7C51E1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "595DFC3F-8A71-4AF1-BBA2-F10BF189FF06";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;

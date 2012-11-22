@@ -17,7 +17,7 @@
             <PushSDK:PhonePushApplicationService.PushPage>/PushWooshWP7Sample;component/DisplayPushContent.xaml</PushSDK:PhonePushApplicationService.PushPage>
 
             <!--  Page on which the navigation is when receiving toast push notification.  -->
-              <!--<PushSDK:PhonePushApplicationService.ServiceName>[Service Name]</PushSDK:PhonePushApplicationService.ServiceName>-->
+            <!--  <PushSDK:PhonePushApplicationService.ServiceName>[Service Name]</PushSDK:PhonePushApplicationService.ServiceName>  -->
 
             <!--  Tile trusted servers  -->
             <PushSDK:PhonePushApplicationService.TileTrustedServers>

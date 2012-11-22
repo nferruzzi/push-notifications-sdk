@@ -11,11 +11,20 @@
 @protocol PushNotificationDelegate
 
 @optional
+//succesfully registered for push notifications
+- (void) onDidRegisterForRemoteNotificationsWithDeviceToken:(NSString *)token;
+
+//failed to register for push notifications
+- (void) onDidFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
+
 //handle push notification, display alert, if this method is implemented onPushAccepted will not be called, internal message boxes will not be displayed
 - (void) onPushReceived:(PushNotificationManager *)pushManager withNotification:(NSDictionary *)pushNotification onStart:(BOOL)onStart;
 
 //user pressed OK on the push notification
 - (void) onPushAccepted:(PushNotificationManager *)pushManager withNotification:(NSDictionary *)pushNotification;
+
+//user pressed OK on the push notification
+- (void) onPushAccepted:(PushNotificationManager *)pushManager withNotification:(NSDictionary *)pushNotification onStart:(BOOL)onStart;
 @end
 
 @interface PushNotificationManager : NSObject {
@@ -32,7 +41,7 @@
 @property (nonatomic, retain) NSDictionary *pushNotifications;
 @property (nonatomic, assign) NSObject<PushNotificationDelegate> *delegate;
 
-+ (void)initializeAppCode:(NSString *)appCode appName:(NSString *)appName;
++ (void)initializeWithAppCode:(NSString *)appCode appName:(NSString *)appName;
 
 + (PushNotificationManager *)pushManager;
 
