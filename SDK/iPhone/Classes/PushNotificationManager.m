@@ -180,13 +180,18 @@
 			}
 		}
 		
-		NSString * appname = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
-		if(!appname) {
+		NSString * appname = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"Pushwoosh_APPNAME"];
+		if(!appname)
+			appname = [[NSUserDefaults standardUserDefaults] objectForKey:@"Pushwoosh_APPNAME"];
+		
+		if(!appname)
+			appname = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+		
+		if(!appname)
 			appname = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 			
-			if(!appname) {
-				appname = @"";
-			}
+		if(!appname) {
+			appname = @"";
 		}
 		
 		instance = [[PushNotificationManager alloc] initWithApplicationCode:appid appName:appname ];
