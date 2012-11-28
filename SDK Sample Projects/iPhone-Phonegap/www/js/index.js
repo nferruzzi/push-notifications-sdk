@@ -46,7 +46,7 @@ var app = {
 										});
 
 		
-		var onSuccess = function(position) {
+		function geolocationSuccess(position) {
 			pushNotification.sendLocation({lat:position.coords.latitude, lon:position.coords.longitude},
 									 function(status) {
 										  console.warn('sendLocation success');
@@ -59,12 +59,23 @@ var app = {
 		
 		// onError Callback receives a PositionError object
 		//
-		function onError(error) {
+		function geolocationError(error) {
 			alert('code: '    + error.code    + '\n' +
 				  'message: ' + error.message + '\n');
 		}
 		
-		navigator.geolocation.getCurrentPosition(onSuccess, onError);
+		function getCurrentPosition() {
+			navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError);
+		}
+		
+		//greedy method to get user position every 3 second. works well for demo.
+		setInterval(getCurrentPosition, 3000);
+		
+		//this method just gives the position once
+//		navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError);
+		
+		//this method should track the user position as per Phonegap docs.
+//		navigator.geolocation.watchPosition(geolocationSuccess, geolocationError, { maximumAge: 3000, enableHighAccuracy: true });
     },
     report: function(id) {
         console.log("report:" + id);
