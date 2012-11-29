@@ -134,6 +134,12 @@
           handle received messages.
         -->
         <service android:name="com.arellomobile.android.push.PushGCMIntentService"/>
+        
+        <!--
+          Service for sending location updates
+        -->
+        <service android:name="com.arellomobile.android.push.GeoLocationService"/>
+        
 
     </application>
 </manifest>

@@ -11,10 +11,13 @@ package com.arellomobile.android.push;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.arellomobile.android.push.data.PushZoneLocation;
 import com.arellomobile.android.push.exception.PushWooshException;
 import com.arellomobile.android.push.preference.SoundType;
 import com.arellomobile.android.push.preference.VibrateType;
@@ -216,6 +219,40 @@ public class PushManager
 			public void run() { new SendPushTagsAsyncTask(context, callBack).execute(tags); }
 		});
 	}
+	
+	public static void sendLocation(Context context, final Location location)
+	{
+		if (GCMRegistrar.isRegisteredOnServer(context) == false)
+			return;
+
+		AsyncTask<Void, Void, Void> task;
+		try
+		{
+			task = new WorkerTask(context)
+			{
+				@Override
+				protected void doWork(Context context)
+				{
+					try {
+						DeviceFeature2_5.getNearestZone(context, location);
+					} catch (Exception e) {
+//						e.printStackTrace();
+					}
+				}
+			};
+		}
+		catch (Throwable e)
+		{
+			// we are not in UI thread. Simple run our registration
+			try {
+				DeviceFeature2_5.getNearestZone(context, location);
+			} catch (Exception e1) {
+//				e1.printStackTrace();
+			}
+			return;
+		}
+		ExecutorHelper.executeAsyncTask(task);
+	}
 
 	//	------------------- 2.5 Features ENDS -------------------
 
@@ -357,6 +394,9 @@ public class PushManager
 	
 	private void sendAppOpen(Context context)
 	{
+		if (GCMRegistrar.isRegisteredOnServer(context) == false)
+			return;
+
 		AsyncTask<Void, Void, Void> task;
 		try
 		{

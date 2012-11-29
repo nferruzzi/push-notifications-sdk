@@ -13,6 +13,7 @@ package com.pushwoosh.test.plugin.pushnotifications;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.util.Log;
 import com.arellomobile.android.push.PushManager;
 import com.arellomobile.android.push.BasePushMessageReceiver;
@@ -36,6 +37,7 @@ public class PushNotifications extends Plugin
 	public static final String SET_TAGS = "setTags";
 	public static final String START_GEO_PUSHES = "startGeoPushes";
 	public static final String STOP_GEO_PUSHES = "stopGeoPushes";
+	public static final String SEND_LOCATION = "sendLocation";
 	
 	boolean loggedStart = false;
 
@@ -190,6 +192,45 @@ public class PushNotifications extends Plugin
 
 		return result;
 	}
+	
+	private PluginResult internalSendLocation(JSONArray data, String callbackId) {
+		if (mPushManager == null)
+		{
+			return new PluginResult(Status.ERROR);
+		}
+		
+		JSONObject params = null;
+		try
+		{
+			params = data.getJSONObject(0);
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+			return new PluginResult(Status.ERROR);
+		}
+		
+		double lat = 0;
+		double lon = 0;
+
+		try
+		{
+			lat = params.getDouble("lat");
+			lon = params.getDouble("lon");
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+			return new PluginResult(Status.ERROR);
+		}
+		
+		Location location = new Location("");
+		location.setLatitude(lat);
+		location.setLongitude(lon);
+		PushManager.sendLocation(cordova.getActivity(), location);
+
+		return new PluginResult(Status.OK);
+	}
 
 	private PluginResult internalSendTags(JSONArray data, String callbackId)
 	{
@@ -262,6 +303,11 @@ public class PushNotifications extends Plugin
 		if (SET_TAGS.equals(action))
 		{
 			return internalSendTags(data, callbackId);
+		}
+		
+		if (SEND_LOCATION.equals(action))
+		{
+			return internalSendLocation(data, callbackId);
 		}
 
 		if (START_GEO_PUSHES.equals(action))
