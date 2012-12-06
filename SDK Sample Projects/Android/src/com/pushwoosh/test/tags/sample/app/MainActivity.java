@@ -38,6 +38,18 @@ public class MainActivity extends FragmentActivity implements SendTagsCallBack
 
 		PushManager pushManager = new PushManager(this, APP_ID, SENDER_ID);
 		pushManager.onStartup(this);
+		
+		//The commented code below shows how to use local notifications
+		//PushManager.clearLocalNotifications(this);
+		
+		//easy way
+		//PushManager.scheduleLocalNotification(this, "Your pumpkins are ready!", 30);
+		
+		//expert mode
+		//Bundle extras = new Bundle();
+		//extras.putString("b", "https://cp.pushwoosh.com/img/arello-logo.png");
+		//extras.putString("u", "50");
+		//PushManager.scheduleLocalNotification(this, "Your pumpkins are ready!", extras, 30);
 
 		mGeneralStatus = (TextView) findViewById(R.id.general_status);
 		mTagsStatus = (TextView) findViewById(R.id.status);

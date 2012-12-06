@@ -15,13 +15,10 @@ import com.arellomobile.android.push.preference.VibrateType;
  */
 public class SimpleNotificationFactory extends BaseNotificationFactory
 {
-	private String mTitle;
-
 	public SimpleNotificationFactory(Context context, Bundle data, String appName, String title, SoundType soundType,
 			VibrateType vibrateType)
 	{
-		super(context, data, appName, soundType, vibrateType);
-		mTitle = title;
+		super(context, data, appName, title, soundType, vibrateType);
 	}
 
 	@Override
@@ -30,13 +27,13 @@ public class SimpleNotificationFactory extends BaseNotificationFactory
 		Notification notification;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 		{
-			notification = V11NotificationCreator.generateNotification(context, data, appName + tickerTitle);
+			notification = V11NotificationCreator.generateNotification(context, data, tickerTitle);
 		}
 		else
 		{
-			notification = NotificationCreator.generateNotification(context, data, appName + tickerTitle);
+			notification = NotificationCreator.generateNotification(context, data, tickerTitle);
 		}
-		notification.setLatestEventInfo(context, appName, mTitle, notification.contentIntent);
+		notification.setLatestEventInfo(context, appName, getTitle(), notification.contentIntent);
 
 		return notification;
 	}

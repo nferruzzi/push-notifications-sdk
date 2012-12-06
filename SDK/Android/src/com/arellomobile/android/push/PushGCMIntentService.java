@@ -142,7 +142,7 @@ public class PushGCMIntentService extends GCMBaseIntentService
 		if (layoutId != 0 && bannerUrl != null)
 		{
 			notificationFactory =
-					new BannerNotificationFactory(context, extras, appName.toString(), PushManager.sSoundType, PushManager.sVibrateType);
+					new BannerNotificationFactory(context, extras, appName.toString(), title, PushManager.sSoundType, PushManager.sVibrateType);
 		}
 		else
 		{

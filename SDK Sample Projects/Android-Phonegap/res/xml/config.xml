@@ -49,7 +49,7 @@
     <plugin name="Capture" value="org.apache.cordova.Capture"/>
     <plugin name="Battery" value="org.apache.cordova.BatteryListener"/>
     <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
-    <plugin name="PushNotification" value="com.pushwoosh.test.plugin.pushnotifications.PushNotifications" onload="true"/>
+    <plugin name="PushNotification" value="com.pushwoosh.plugin.pushnotifications.PushNotifications" onload="true"/>
 </plugins>
 </cordova>
 

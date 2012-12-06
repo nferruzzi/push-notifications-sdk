@@ -32,6 +32,15 @@
 	PushNotification.prototype.unregisterDevice = function(success, fail) {
 		cordova.exec(success, fail, "PushNotification", "unregisterDevice", []);
 	};
+
+	//config params: {msg:"message", seconds:30, userData:"optional"}
+	PushNotification.prototype.createLocalNotification = function(config, success, fail) {
+		cordova.exec(success, fail, "PushNotification", "createLocalNotification", config ? [config] : []);
+	};
+
+	PushNotification.prototype.clearLocalNotification = function() {
+		cordova.exec(null, null, "PushNotification", "clearLocalNotification", []);
+	};
 	
 	//advanced background task to track device position and not drain the battery
 	PushNotification.prototype.startGeoPushes = function(success, fail) {

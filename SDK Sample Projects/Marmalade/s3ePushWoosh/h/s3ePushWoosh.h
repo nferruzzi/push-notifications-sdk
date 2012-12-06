@@ -93,6 +93,17 @@ s3eResult s3ePushWooshNotificationSetIntTag(const char * tagName, int tagValue);
 
 s3eResult s3ePushWooshNotificationSetStringTag(const char * tagName, const char * tagValue);
 
+/**
+ * These methods have been implemented for Android only. Yet.
+ */
+s3eResult s3ePushWooshClearLocalNotifications();
+
+/**
+ * userdata is optional paramater and can be null
+ * to differentiate between local and remote notifications: local notification will have "local":true parameter in the notification payload
+ */
+s3eResult s3ePushWooshScheduleLocalNotification(const char * message, int seconds, const char * userdata);
+
 S3E_END_C_DECL
 
 #endif /* !S3E_EXT_PUSHWOOSH_H */

@@ -24,14 +24,16 @@ public abstract class BaseNotificationFactory implements NotificationFactory
 	private Context mContext;
 	private Bundle mData;
 	private String mAppName;
+	private String mTitle;
 	private SoundType mSoundType;
 	private VibrateType mVibrateType;
 
-	public BaseNotificationFactory(Context context, Bundle data, String appName, SoundType soundType, VibrateType vibrateType)
+	public BaseNotificationFactory(Context context, Bundle data, String appName, String title, SoundType soundType, VibrateType vibrateType)
 	{
 		mContext = context;
 		mData = data;
 		mAppName = appName;
+		mTitle = title;
 		mSoundType = soundType;
 		mVibrateType = vibrateType;
 	}
@@ -39,15 +41,15 @@ public abstract class BaseNotificationFactory implements NotificationFactory
 	@Override
 	public void generateNotification()
 	{
-		String newMessageString = ": new message";
-		int resId =
-				getContext().getResources().getIdentifier("new_push_message", "string", getContext().getPackageName());
+		int resId = getContext().getResources().getIdentifier("new_push_message", "string", getContext().getPackageName());
 		if (0 != resId)
 		{
-			newMessageString = getContext().getString(resId);
+			String newMessageString = getContext().getString(resId);
+			mNotification = generateNotificationInner(getContext(), getData(), mAppName, newMessageString);
+			return;
 		}
 
-		mNotification = generateNotificationInner(getContext(), getData(), mAppName, newMessageString);
+		mNotification = generateNotificationInner(getContext(), getData(), mAppName, mTitle);
 	}
 	
 	abstract Notification generateNotificationInner(Context context, Bundle data, String appName, String tickerTitle);
@@ -139,5 +141,10 @@ public abstract class BaseNotificationFactory implements NotificationFactory
 	protected VibrateType getVibrateType()
 	{
 		return mVibrateType;
+	}
+	
+	protected String getTitle()
+	{
+		return mTitle;
 	}
 }

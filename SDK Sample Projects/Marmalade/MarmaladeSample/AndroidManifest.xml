@@ -63,6 +63,8 @@
           handle received messages.
         -->
         <service android:name="com.arellomobile.android.push.PushGCMIntentService"/>
+		
+		<receiver android:name="com.arellomobile.android.push.AlarmReceiver"></receiver>
 
         ${EXTRA_APPLICATION_MANIFESTS}
     </application>

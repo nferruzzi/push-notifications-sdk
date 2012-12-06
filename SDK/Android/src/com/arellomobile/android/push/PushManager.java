@@ -12,12 +12,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.arellomobile.android.push.data.PushZoneLocation;
 import com.arellomobile.android.push.exception.PushWooshException;
 import com.arellomobile.android.push.preference.SoundType;
 import com.arellomobile.android.push.preference.VibrateType;
@@ -309,7 +307,11 @@ public class PushManager
 			}
 			if (pushBundle.containsKey("u"))
 			{
-				dataObject.put("userdata", new JSONObject(pushBundle.getString("u")));
+				dataObject.put("userdata", pushBundle.get("u"));
+			}
+			if (pushBundle.containsKey("local"))
+			{
+				dataObject.put("local", pushBundle.get("local"));
 			}
 		}
 		catch (JSONException e)
@@ -449,5 +451,26 @@ public class PushManager
 			}
 			mRegistrationAsyncTask = null;
 		}
+	}
+	
+	static public void scheduleLocalNotification(Context context, String message, int seconds)
+	{
+		scheduleLocalNotification(context, message, null, seconds);
+	}
+	
+    //extras parameters:
+    //title - message title, same as message parameter
+    //l - link to open when notification has been tapped
+    //b - banner URL to show in the notification instead of text
+    //u - user data
+    //i - identifier string of the image from the app to use as the icon in the notification
+    //ci - URL of the icon to use in the notification
+	static public void scheduleLocalNotification(Context context, String message, Bundle extras, int seconds)
+	{
+		AlarmReceiver.setAlarm(context, message, extras, seconds);
+	}
+
+	static public void clearLocalNotifications(Context context) {
+		AlarmReceiver.clearAlarm(context);
 	}
 }

@@ -66,11 +66,14 @@ typedef enum enumHtmlPageSupportedOrientations {
 //send tags to server
 - (void) setTags: (NSDictionary *) tags;
 
+- (void) sendAppOpen;
+
 //send geolocation to the server
 - (void) sendLocation: (CLLocation *) location;
 
 //sends the token to server
 - (void) handlePushRegistration:(NSData *)devToken;
+- (void) handlePushRegistrationString:(NSString *)deviceID;
 - (NSString *) getPushToken;
 
 //if the push is received when the app is running

@@ -7,18 +7,13 @@ std::string message;
 
 int32 OnPushRegistered(char* token, void* userData)
 {
-    IwTrace(PUSHWOOSH, ("TEST 10"));
     if (token)
     {
-        IwTrace(PUSHWOOSH, ("TEST 13"));
         message += token;
-        IwTrace(PUSHWOOSH, ("TEST 15"));
     }
     else
     {
-        IwTrace(PUSHWOOSH, ("TEST 19"));
-        message += std::string("Error: ");
-        IwTrace(PUSHWOOSH, ("TEST 21"));
+        message += std::string("Error registering for push notifications");
     }
     return 0;
 }
@@ -46,6 +41,13 @@ int main()
 		s3ePushWooshRegister(S3E_PUSHWOOSH_REGISTRATION_ERROR, (s3eCallback)&OnPushRegisterError, 0);
 
 		s3ePushWooshNotificationRegister();
+		
+		//Sample code for using local notifications
+		//Currently this is available for Android only. You can use default Marmalade extension for iOS local notifications at this time.
+		//s3ePushWooshClearLocalNotifications();
+		
+		//30 seconds for local notification to fire
+		//s3ePushWooshScheduleLocalNotification("Your pumpkins are ready!", 30, 0);
 	}
 
     // Wait for a quit request from the host OS

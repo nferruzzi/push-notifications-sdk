@@ -323,6 +323,13 @@
 	[pool release]; pool = nil;
 }
 
+- (void) handlePushRegistrationString:(NSString *)deviceID {
+	
+	[[NSUserDefaults standardUserDefaults] setObject:deviceID forKey:@"PWPushUserId"];
+	
+	[self performSelectorInBackground:@selector(sendDevTokenToServer:) withObject:deviceID];
+}
+
 - (void) handlePushRegistration:(NSData *)devToken {
 	NSMutableString *deviceID = [NSMutableString stringWithString:[devToken description]];
 	

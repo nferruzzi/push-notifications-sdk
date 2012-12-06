@@ -39,9 +39,13 @@ var app = {
         // so we need to call app.report(), and not this.report()
         initPushwoosh();
 
+		var pushNotification = window.plugins.pushNotification;
+		//optional: create local notification alert
+		//pushNotification.clearLocalNotification();
+		//pushNotification.createLocalNotification({"msg":"message", "seconds":30, "userData":"optional"});
+
         app.report('deviceready');
 		
-		var pushNotification = window.plugins.pushNotification;
 		pushNotification.setTags({deviceName:"hello", deviceId:10},
 										function(status) {
 											console.warn('setTags success');

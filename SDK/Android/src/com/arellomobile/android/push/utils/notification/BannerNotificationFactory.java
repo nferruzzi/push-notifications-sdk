@@ -21,9 +21,9 @@ public class BannerNotificationFactory extends BaseNotificationFactory
 {
 	public static final String sNotificationLayout = "notification";
 
-	public BannerNotificationFactory(Context context, Bundle data, String appName, SoundType soundType, VibrateType vibrateType)
+	public BannerNotificationFactory(Context context, Bundle data, String appName, String title, SoundType soundType, VibrateType vibrateType)
 	{
-		super(context, data, appName, soundType, vibrateType);
+		super(context, data, appName, title, soundType, vibrateType);
 	}
 
 	@SuppressLint("NewApi") @Override
@@ -71,7 +71,7 @@ public class BannerNotificationFactory extends BaseNotificationFactory
 		}
 		else
 		{
-			notification.tickerText = appName + tickerTitle;
+			notification.tickerText = tickerTitle;
 		}
 		
 		notification.icon = Helper.tryToGetIconFormStringOrGetFromApplication(getData().getString("i"), getContext());

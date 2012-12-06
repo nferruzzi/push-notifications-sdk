@@ -21,6 +21,8 @@ typedef     char *(*s3ePushWooshGetToken_t)();
 typedef  s3eResult(*s3ePushWooshNotificationUnRegister_t)();
 typedef  s3eResult(*s3ePushWooshNotificationSetIntTag_t)(const char * tagName, int tagValue);
 typedef  s3eResult(*s3ePushWooshNotificationSetStringTag_t)(const char * tagName, const char * tagValue);
+typedef  s3eResult(*s3ePushWooshClearLocalNotifications_t)();
+typedef  s3eResult(*s3ePushWooshScheduleLocalNotification_t)(const char * message, int seconds, const char * userdata);
 
 /**
  * struct that gets filled in by s3ePushWooshRegister
@@ -35,6 +37,8 @@ typedef struct s3ePushWooshFuncs
     s3ePushWooshNotificationUnRegister_t m_s3ePushWooshNotificationUnRegister;
     s3ePushWooshNotificationSetIntTag_t m_s3ePushWooshNotificationSetIntTag;
     s3ePushWooshNotificationSetStringTag_t m_s3ePushWooshNotificationSetStringTag;
+    s3ePushWooshClearLocalNotifications_t m_s3ePushWooshClearLocalNotifications;
+    s3ePushWooshScheduleLocalNotification_t m_s3ePushWooshScheduleLocalNotification;
 } s3ePushWooshFuncs;
 
 static s3ePushWooshFuncs g_Ext;
@@ -248,6 +252,50 @@ s3eResult s3ePushWooshNotificationSetStringTag(const char * tagName, const char 
 #endif
 
     s3eResult ret = g_Ext.m_s3ePushWooshNotificationSetStringTag(tagName, tagValue);
+
+#ifdef __mips
+    s3eDeviceLoaderCallDone(S3E_TRUE, NULL);
+#endif
+
+    return ret;
+}
+
+s3eResult s3ePushWooshClearLocalNotifications()
+{
+    IwTrace(PUSHWOOSH_VERBOSE, ("calling s3ePushWoosh[8] func: s3ePushWooshClearLocalNotifications"));
+
+    if (!_extLoad())
+        return S3E_RESULT_SUCCESS;
+
+#ifdef __mips
+    // For MIPs platform we do not have asm code for stack switching 
+    // implemented. So we make LoaderCallStart call manually to set GlobalLock
+    s3eDeviceLoaderCallStart(S3E_TRUE, NULL);
+#endif
+
+    s3eResult ret = g_Ext.m_s3ePushWooshClearLocalNotifications();
+
+#ifdef __mips
+    s3eDeviceLoaderCallDone(S3E_TRUE, NULL);
+#endif
+
+    return ret;
+}
+
+s3eResult s3ePushWooshScheduleLocalNotification(const char * message, int seconds, const char * userdata)
+{
+    IwTrace(PUSHWOOSH_VERBOSE, ("calling s3ePushWoosh[9] func: s3ePushWooshScheduleLocalNotification"));
+
+    if (!_extLoad())
+        return S3E_RESULT_SUCCESS;
+
+#ifdef __mips
+    // For MIPs platform we do not have asm code for stack switching 
+    // implemented. So we make LoaderCallStart call manually to set GlobalLock
+    s3eDeviceLoaderCallStart(S3E_TRUE, NULL);
+#endif
+
+    s3eResult ret = g_Ext.m_s3ePushWooshScheduleLocalNotification(message, seconds, userdata);
 
 #ifdef __mips
     s3eDeviceLoaderCallDone(S3E_TRUE, NULL);

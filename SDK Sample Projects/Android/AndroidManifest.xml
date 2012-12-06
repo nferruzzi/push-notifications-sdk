@@ -108,6 +108,8 @@
           Service for sending location updates
         -->
         <service android:name="com.arellomobile.android.push.GeoLocationService"/>
+        
+        <receiver android:name="com.arellomobile.android.push.AlarmReceiver"></receiver>
 
     </application>
 </manifest>

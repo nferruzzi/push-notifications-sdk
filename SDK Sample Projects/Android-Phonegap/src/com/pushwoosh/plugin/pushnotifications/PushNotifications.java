@@ -8,12 +8,13 @@
 //
 // MIT Licensed
 
-package com.pushwoosh.test.plugin.pushnotifications;
+package com.pushwoosh.plugin.pushnotifications;
 
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
+import android.os.Bundle;
 import android.util.Log;
 import com.arellomobile.android.push.PushManager;
 import com.arellomobile.android.push.BasePushMessageReceiver;
@@ -38,6 +39,8 @@ public class PushNotifications extends Plugin
 	public static final String START_GEO_PUSHES = "startGeoPushes";
 	public static final String STOP_GEO_PUSHES = "stopGeoPushes";
 	public static final String SEND_LOCATION = "sendLocation";
+	public static final String CREATE_LOCAL_NOTIFICATION = "createLocalNotification";
+	public static final String CLEAR_LOCAL_NOTIFICATION = "clearLocalNotification";
 	
 	boolean loggedStart = false;
 
@@ -329,6 +332,50 @@ public class PushNotifications extends Plugin
 			}
 
 			mPushManager.stopTrackingGeoPushes();
+			return new PluginResult(Status.OK);
+		}
+
+		if (CREATE_LOCAL_NOTIFICATION.equals(action))
+		{
+			JSONObject params = null;
+			try
+			{
+				params = data.getJSONObject(0);
+			}
+			catch (JSONException e)
+			{
+				e.printStackTrace();
+				return new PluginResult(Status.ERROR);
+			}
+
+			try
+			{
+				//config params: {msg:"message", seconds:30, userData:"optional"}
+				String message = params.getString("msg");
+				Integer seconds = params.getInt("seconds");
+				if(message == null || seconds == null)
+					return new PluginResult(Status.ERROR);
+
+				String userData = params.getString("userData");
+				
+				Bundle extras = new Bundle();
+				if(userData != null)
+					extras.putString("u", userData);
+				
+				PushManager.scheduleLocalNotification(cordova.getActivity(), message, extras, seconds);
+			}
+			catch (JSONException e)
+			{
+				e.printStackTrace();
+				return new PluginResult(Status.ERROR);
+			}
+
+			return new PluginResult(Status.OK);
+		}
+		
+		if (CLEAR_LOCAL_NOTIFICATION.equals(action))
+		{
+			PushManager.clearLocalNotifications(cordova.getActivity());
 			return new PluginResult(Status.OK);
 		}
 
