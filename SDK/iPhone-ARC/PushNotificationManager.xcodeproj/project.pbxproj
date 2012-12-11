@@ -56,6 +56,7 @@
 		A4F8239015C925C400913778 /* PWRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PWRequest.m; path = Classes/PWRequest.m; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* PushNotificationManager_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotificationManager_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		AB9587321670BD8D00962523 /* HtmlWebViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HtmlWebViewControllerDelegate.h; path = Classes/HtmlWebViewControllerDelegate.h; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libPushNotificationManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPushNotificationManager.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -104,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				A4F8238515C9257D00913778 /* Network */,
+				AB9587321670BD8D00962523 /* HtmlWebViewControllerDelegate.h */,
 				50BD5D3D1365DA3C00275CDB /* HtmlWebViewController.h */,
 				50BD5D3E1365DA3C00275CDB /* HtmlWebViewController.m */,
 				50BD5D501365DA3C00275CDB /* PushNotificationManager.h */,

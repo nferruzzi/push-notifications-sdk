@@ -10,6 +10,7 @@
 
 @synthesize webview, activityIndicator;
 @synthesize supportedOrientations;
+@synthesize delegate;
 
 - (id)initWithURLString:(NSString *)url {
 	if(self = [super init]) {
@@ -36,6 +37,14 @@
 	activityIndicator.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
 	[self.view addSubview:activityIndicator];
 	
+	UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	closeButton.frame = CGRectMake(self.view.frame.size.width - 59.0f, 18.0f, 44.0f, 44.0f);
+	closeButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
+	[closeButton addTarget:self action:@selector(closeButtonAction) forControlEvents:UIControlEventTouchUpInside];
+	closeButton.titleLabel.font = [UIFont fontWithName:@"AppleColorEmoji" size:35.0f];
+	[closeButton setTitle:@"❎" forState:UIControlStateNormal];
+	[self.view addSubview:closeButton];
+	
 //	[webview setBackgroundColor:[UIColor clearColor]];
 	webview.opaque = YES;
 	webview.scalesPageToFit = NO;
@@ -45,7 +54,11 @@
 
 - (void)dealloc {
 	webview.delegate = nil;
-	
+}
+
+- (void) closeButtonAction {
+	if ([self.delegate respondsToSelector:@selector(htmlWebViewControllerDidClose:)])
+		[self.delegate htmlWebViewControllerDidClose:self];
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {

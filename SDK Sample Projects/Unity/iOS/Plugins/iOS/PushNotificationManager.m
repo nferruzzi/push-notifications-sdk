@@ -668,6 +668,7 @@ void setStringTag(char * tagName, char * tagValue)
 
 
 #import <objc/runtime.h>
+#import "PW_SBJsonWriter.h"
 
 @implementation UIApplication(Pushwoosh)
 
@@ -700,14 +701,9 @@ void setStringTag(char * tagName, char * tagValue)
 //handle push notification, display alert, if this method is implemented onPushAccepted will not be called, internal message boxes will not be displayed
 - (void) onPushReceived:(PushNotificationManager *)pushManager withNotification:(NSDictionary *)pushNotification onStart:(BOOL)onStart
 {
-	NSMutableArray *requestStringBuilder = [NSMutableArray new];
-	
-	for (NSString *key in [pushNotification allKeys]) {
-		[requestStringBuilder addObject:[NSString stringWithFormat:@"\"%@\":%@", key, [pushNotification objectForKey:key]]];
-	}
-	NSString *requestString = [requestStringBuilder componentsJoinedByString:@", "];
-	NSString *jsonRequestData = [NSString stringWithFormat:@"{%@}", requestString];
-	[requestStringBuilder release];
+	PW_SBJsonWriter * json = [[PW_SBJsonWriter alloc] init];
+	NSString *jsonRequestData =[json stringWithObject:pushNotification];
+	[json release]; json = nil;
 
 	const char * str = [jsonRequestData UTF8String];
 	

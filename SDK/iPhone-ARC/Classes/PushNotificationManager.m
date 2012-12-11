@@ -25,7 +25,7 @@
 
 @implementation PushNotificationManager
 
-@synthesize appCode, appName, navController, pushNotifications, delegate;
+@synthesize appCode, appName, pushNotifications, delegate;
 @synthesize supportedOrientations, showPushnotificationAlert;
 
 - (NSString *) stringFromMD5: (NSString *)val{
@@ -120,31 +120,19 @@
     return uniqueIdentifier;
 }
 
+// this method is for backward compatibility
+- (id) initWithApplicationCode:(NSString *)_appCode navController:(UIViewController *) _navController appName:(NSString *)_appName {
+	return [self initWithApplicationCode:_appCode appName:_appName];
+}
+
 - (id) initWithApplicationCode:(NSString *)_appCode appName:(NSString *)_appName{
 	if(self = [super init]) {
 		self.supportedOrientations = PWOrientationPortrait | PWOrientationPortraitUpsideDown | PWOrientationLandscapeLeft | PWOrientationLandscapeRight;
 		self.appCode = _appCode;
 		self.appName = _appName;
-		self.navController = [UIApplication sharedApplication].keyWindow.rootViewController;
-		internalIndex = 0;
-		pushNotifications = [[NSMutableDictionary alloc] init];
-		showPushnotificationAlert = TRUE;
+		self.richPushWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+		self.richPushWindow.windowLevel = UIWindowLevelStatusBar + 1.0f;
 		
-		[[NSUserDefaults standardUserDefaults] setObject:_appCode forKey:@"Pushwoosh_APPID"];
-		if(_appName) {
-			[[NSUserDefaults standardUserDefaults] setObject:_appName forKey:@"Pushwoosh_APPNAME"];
-		}
-	}
-	
-	return self;
-}
-
-- (id) initWithApplicationCode:(NSString *)_appCode navController:(UIViewController *) _navController appName:(NSString *)_appName{
-	if (self = [super init]) {
-		self.supportedOrientations = PWOrientationPortrait | PWOrientationPortraitUpsideDown | PWOrientationLandscapeLeft | PWOrientationLandscapeRight;
-		self.appCode = _appCode;
-		self.navController = _navController;
-		self.appName = _appName;
 		internalIndex = 0;
 		pushNotifications = [[NSMutableDictionary alloc] init];
 		showPushnotificationAlert = TRUE;
@@ -250,21 +238,30 @@
 	return instance;
 }
 
-- (void) closeAction {
-	[navController dismissModalViewControllerAnimated:YES];
-}
-
 - (void) showPushPage:(NSString *)pageId {
 	NSString *url = [NSString stringWithFormat:kServiceHtmlContentFormatUrl, pageId];
 	HtmlWebViewController *vc = [[HtmlWebViewController alloc] initWithURLString:url];
+	vc.delegate = self;
 	vc.supportedOrientations = supportedOrientations;
 	
-	// Create the navigation controller and present it modally.
-	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
-	vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleDone target:self action:@selector(closeAction)];
-    
-	[navController presentModalViewController:navigationController animated:YES];
+	self.richPushWindow.rootViewController = vc;
+	self.richPushWindow.alpha = 0.0f;
+	self.richPushWindow.hidden = NO;
 	
+	[UIView animateWithDuration:0.3 animations:^{
+		self.richPushWindow.alpha = 1.0f;
+	} completion:^(BOOL finished) {
+		
+	}];
+}
+
+- (void)htmlWebViewControllerDidClose:(HtmlWebViewController *)viewController {
+	[UIView animateWithDuration:0.3 animations:^{
+		self.richPushWindow.alpha = 0.0f;
+	} completion:^(BOOL finished) {
+		self.richPushWindow.rootViewController = nil;
+		self.richPushWindow.hidden = YES;
+	}];
 }
 
 - (void) sendDevTokenToServer:(NSString *)deviceID {
@@ -567,8 +564,6 @@
 
 - (void) dealloc {
 	self.delegate = nil;
-	self.navController = nil;
-	
 }
 
 @end
