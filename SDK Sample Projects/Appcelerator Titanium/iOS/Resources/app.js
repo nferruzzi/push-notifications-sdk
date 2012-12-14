@@ -24,29 +24,38 @@ var register = Ti.UI.createButton({
 	height : 25
 });
 
+//record stats for app open with Pushwoosh
+PushWoosh.sendAppOpen();
+
 register.addEventListener('click', function() {
 	Ti.Network.registerForPushNotifications({
 		types : [Ti.Network.NOTIFICATION_TYPE_BADGE, Ti.Network.NOTIFICATION_TYPE_ALERT, Ti.Network.NOTIFICATION_TYPE_SOUND],
 		success : function(e) {
 			var deviceToken = e.deviceToken;
 			Ti.API.info('successfully registered for apple device token with ' + e.deviceToken);
+			
 			PushWoosh.register(function(data) {
 				Ti.API.debug("PushWoosh register success: " + JSON.stringify(data));
 				
 				PushWoosh.setTags({alias:"device1"}, function(data) {
 						Ti.API.debug("PushWoosh sendTags success: " + JSON.stringify(data));
-					},function(error) {
-						Ti.API.warn("Couldn't setTags with PushWoosh");
+					},function(e) {
+						Ti.API.warn("Couldn't setTags with PushWoosh: " + JSON.stringify(e));
 				});
 				
-			}, function(errorregistration) {
-				Ti.API.warn("Couldn't register with PushWoosh");
+			}, function(e) {
+				Ti.API.warn("Couldn't register with PushWoosh: " + JSON.stringify(e));
 			});
 		},
 		error : function(e) {
-			Ti.API.warn("push notifications disabled: " + e);
+			Ti.API.warn("push notifications disabled: " + JSON.stringify(e));
 		},
 		callback : function(e) {
+			Ti.API.warn("push message received: " + JSON.stringify(e));
+			
+			//send stats to Pushwoosh about push opened
+			PushWoosh.sendPushStat(e.data.p);
+			
 			var a = Ti.UI.createAlertDialog({
 				title : 'New Message',
 				message : e.data.alert
@@ -55,7 +64,7 @@ register.addEventListener('click', function() {
 			a.show();
 		}
 	});
-	Ti.API.info('registered with PushWoosh');
+	Ti.API.info('registering with PushWoosh');
 });
 win.add(register);
 

@@ -24,22 +24,11 @@ var PushWoosh = {
 
 		payload = (params) ? JSON.stringify(params) : '';
 		Ti.API.info('sending registration with params ' + payload);
-		PushWoosh.helper(url, method, payload, function(data, status) {
-			Ti.API.log('completed registration: ' + JSON.stringify(status));
-			if(status == 200) {
-				lambda({
-					action : "subscribed",
-					success : true
-				});
-			} else {
-				Ti.API.log('error registration: ' + JSON.stringify(status));
-			}
-		}, function(xhr, error) {
-			Ti.API.log('xhr error registration: ' + JSON.stringify(error));
-		});
+		
+		PushWoosh.helper(url, method, payload, lambda, lambdaerror);
 	},
 	
-	unregister : function(lambda) {
+	unregister : function(lambda, lambdaerror) {
 		var method = 'POST';
 		var token = PushWoosh.getToken();
 		var url = PushWoosh.baseurl + 'unregisterDevice';
@@ -53,25 +42,62 @@ var PushWoosh = {
 
 		payload = (params) ? JSON.stringify(params) : '';
 		Ti.API.info('sending registration with params ' + payload);
-		PushWoosh.helper(url, method, payload, function(data, status) {
-			if(status == 200) {
-				lambda({
-					status : status
-				});
-			} else {
-				lambda({
-					status : status
-				});
-			}
-		}, function(xhr, error) {
-			lambda({
-				success : false,
-				xhr : xhr.status,
-				error : error
-			});
-		});
+		PushWoosh.helper(url, method, payload, lambda, lambdaerror);
 	},
 	
+	sendBadge : function(badgeNumber, lambda, lambdaerror) {
+		var method = 'POST';
+		var token = PushWoosh.getToken();
+		var url = PushWoosh.baseurl + 'setBadge';
+		
+		var params = {
+				request : {
+					application : PushWoosh.appCode,
+					hwid : Titanium.Platform.id,
+					badge: badgeNumber
+				}
+			};
+
+		payload = (params) ? JSON.stringify(params) : '';
+		Ti.API.info('sending badge with params ' + payload);
+		PushWoosh.helper(url, method, payload, lambda, lambdaerror);
+	},
+
+	sendAppOpen : function(lambda, lambdaerror) {
+		var method = 'POST';
+		var token = PushWoosh.getToken();
+		var url = PushWoosh.baseurl + 'applicationOpen';
+		
+		var params = {
+				request : {
+					application : PushWoosh.appCode,
+					hwid : Titanium.Platform.id
+				}
+			};
+
+		payload = (params) ? JSON.stringify(params) : '';
+		Ti.API.info('sending appOpen with params ' + payload);
+		PushWoosh.helper(url, method, payload, lambda, lambdaerror);
+	},
+
+	sendPushStat : function(hashValue, lambda, lambdaerror) {
+		var method = 'POST';
+		var token = PushWoosh.getToken();
+		var url = PushWoosh.baseurl + 'pushStat';
+		
+		var params = {
+				request : {
+					application : PushWoosh.appCode,
+					hwid : Titanium.Platform.id,
+					hash: hashValue
+				}
+			};
+
+		payload = (params) ? JSON.stringify(params) : '';
+		Ti.API.info('sending pushStat with params ' + payload);
+		PushWoosh.helper(url, method, payload, lambda, lambdaerror);
+	},
+		
 	setTags : function(tagsJsonObject, lambda, lambdaerror) {
 		var method = 'POST';
 		var token = PushWoosh.getToken();
@@ -87,30 +113,26 @@ var PushWoosh = {
 
 		payload = (params) ? JSON.stringify(params) : '';
 		Ti.API.info('sending tags with params ' + payload);
-		PushWoosh.helper(url, method, payload, function(data, status) {
-			Ti.API.log('setTags success: ' + JSON.stringify(status));
-			if(status == 200) {
-				lambda({
-					action : data,
-					success : status
-				});
-			} else {
-				Ti.API.log('error sending tags: ' + JSON.stringify(status));
-			}
-		}, function(xhr, error) {
-			Ti.API.log('xhr error sending tags: ' + JSON.stringify(error));
-		});
+		PushWoosh.helper(url, method, payload, lambda, lambdaerror);
 	},
 	
 	helper : function(url, method, params, lambda, lambdaerror) {
 		var xhr = Ti.Network.createHTTPClient();
 		xhr.setTimeout(60000);
 		xhr.onerror = function(e) {
+			//Ti.API.log('DEBUG LOG ERROR: ' + JSON.stringify(this));
 			lambdaerror(this, e);
 		};
 		xhr.onload = function() {
-			var results = this.responseText;
-			lambda(results, this.status);
+			//Ti.API.log('DEBUG LOG SEND: ' + JSON.stringify(this));
+			if(this.status == 200) {
+				if(lambda)
+					lambda(this);
+			}
+			else {
+				if(lambdaerror)
+					lambdaerror(this);
+			}
 		};
 		// open the client
 		xhr.open(method, url);
