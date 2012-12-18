@@ -73,6 +73,7 @@ typedef enum enumHtmlPageSupportedOrientations {
 //sends the token to server
 - (void) handlePushRegistration:(NSData *)devToken;
 - (NSString *) getPushToken;
+- (NSString *) uniqueGlobalDeviceIdentifier;
 
 //if the push is received when the app is running
 - (BOOL) handlePushReceived:(NSDictionary *) userInfo;
