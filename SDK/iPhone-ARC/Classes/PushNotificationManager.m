@@ -114,13 +114,6 @@
 }
 
 - (NSString *) uniqueGlobalDeviceIdentifier{
-    // >= iOS6 return identifierForVendor
-    UIDevice *device = [UIDevice currentDevice];
-    if ([device respondsToSelector:@selector(identifierForVendor)] && [NSUUID class]) {
-        NSUUID *uuid = [device identifierForVendor];
-        return [self stringFromMD5:[uuid UUIDString]];
-    }
-    // Fallback on macaddress
     NSString *macaddress = [self macaddress];
     NSString *uniqueIdentifier = [self stringFromMD5:macaddress];
     
